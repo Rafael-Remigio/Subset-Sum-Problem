@@ -6,13 +6,12 @@
 #define n_sums      20
 #define n_problems  (max_n - min_n + 1)
 
-char *BruteForce(int n, integer_t *p, integer_t *sums, integer_t desired_sum, char *comb_bin){
+int BruteForce(int n, integer_t *p, integer_t *sums, integer_t desired_sum){
     
     int comb = 0;
     integer_t test_sum;
 
     for(comb=0;comb<(1<<n);comb++){
-
         test_sum =0;
 
         for(int bit=0; bit<n ;bit++){
@@ -21,21 +20,21 @@ char *BruteForce(int n, integer_t *p, integer_t *sums, integer_t desired_sum, ch
         }   
 
         if(test_sum == desired_sum){break;}
-
     }
 
+    return comb;
     
-    for(int bit=0; bit<n ;bit++){
-        int mask = (1<<bit);   
-        if((comb & mask)!=0){ comb_bin[bit]='1';}else{ comb_bin[bit]='0';}
-
-
-    }
-    comb_bin[n]='\0';
-
-    return comb_bin;
 }
 
+char *Converter(int n,int x, char *sol){
+    for(int bit=0; bit<n ;bit++){
+        int mask = (1<<bit);   
+        if((x & mask)!=0){ sol[bit]='1';}else{ sol[bit]='0';}
+    }
+    sol[n]='\0';
+
+    return sol;
+}
 
 int main(void)
 {   
@@ -48,20 +47,18 @@ int main(void)
     printf("  n_problems .. %d\n",n_problems);
     printf("  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
     printf("\n");
-    //
-    // for each n
-    //
+     
     for(int i = 0;i < 1;i++)
     {
-        int n = all_subset_sum_problems[i].n; // the value of n
+        int n = all_subset_sum_problems[i].n;  
         integer_t *p = all_subset_sum_problems[i].p;    
         integer_t *sums = all_subset_sum_problems[i].sums;    
         char comb_bin[n];
 
         for(int j = 0;j < n_sums;j++)
-        {
-            printf("\n");
-            printf("%lld -> %s\n",all_subset_sum_problems[i].sums[j], BruteForce(n, p, sums, all_subset_sum_problems[i].sums[j], comb_bin));
+        {   
+            int comb = BruteForce(n, p, sums, all_subset_sum_problems[i].sums[j]);
+            printf("%lld -> %s\n",all_subset_sum_problems[i].sums[j], Converter(n, comb, comb_bin));
         }
     }
 

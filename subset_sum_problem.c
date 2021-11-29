@@ -50,10 +50,8 @@
 //
 // place your code here
 //
-// possible function prototype for a recursive brute-force function:
-//   int brute_force(int n,integer_t p[n],int desired_sum,int current_index,integer_t partial_sum);
-// it sould return 1 when the solution is found and 0 otherwise
-// note, however, that you may get a faster function by reducing the number of function arguments (maybe a single pointer to a struct?)
+//  
+//  
 //
 
 
