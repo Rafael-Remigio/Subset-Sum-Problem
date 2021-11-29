@@ -38,7 +38,14 @@ char *Converter(int n,int x, char *sol){
 }
 
 int main(void)
-{   
+{           
+    /* Setting up file */
+    FILE *fp = NULL;
+    
+    /* Open for the first time the file provided as argument */
+    fp = fopen("data.log", "a");
+
+
     
     printf("\n");
     printf("Program configuration:\n");
@@ -49,7 +56,7 @@ int main(void)
     printf("  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
     printf("\n");
      
-    for(int i = 0;i < n_problems;i++)
+    for(int i = 0;i < 15;i++)
     {
         printf("--------------------------- \n");
         
@@ -74,7 +81,7 @@ int main(void)
             printf("%d,  %lld -> %s\n", j ,sum, Converter(n, comb, comb_bin));
         }
 
-        printf("%i %f \n",n, dt);
+        fprintf(fp,"%i %f \n",n, dt);
 
     }
 
