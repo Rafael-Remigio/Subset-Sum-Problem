@@ -1,4 +1,5 @@
 #include <stdio.h> 
+#include "elapsed_time.h"
 #include "000000.h"
 
 #define min_n       10
@@ -48,18 +49,33 @@ int main(void)
     printf("  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
     printf("\n");
      
-    for(int i = 0;i < 1;i++)
+    for(int i = 0;i < n_problems;i++)
     {
+        printf("--------------------------- \n");
+        
+
         int n = all_subset_sum_problems[i].n;  
+        printf("n =  %i\n\n",n);
         integer_t *p = all_subset_sum_problems[i].p;    
         integer_t *sums = all_subset_sum_problems[i].sums;    
-        char comb_bin[n];
+        char comb_bin[n+1];
 
+        double dt = 0;   
         for(int j = 0;j < n_sums;j++)
         {   
-            int comb = BruteForce(n, p, sums, all_subset_sum_problems[i].sums[j]);
-            printf("%lld -> %s\n",all_subset_sum_problems[i].sums[j], Converter(n, comb, comb_bin));
+            integer_t sum = all_subset_sum_problems[i].sums[j];
+
+            double tmp_dt = cpu_time();   
+            int comb = BruteForce(n, p, sums, sum);
+            tmp_dt = cpu_time() - tmp_dt;
+            dt += tmp_dt;
+
+            
+            printf("%d,  %lld -> %s\n", j ,sum, Converter(n, comb, comb_bin));
         }
+
+        printf("%i %f \n",n, dt);
+
     }
 
     return 0;
