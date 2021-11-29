@@ -56,31 +56,40 @@ int main(void)
     printf("  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
     printf("\n");
      
+
+    // start looping for n's
     for(int i = 0;i < 15;i++)
     {
         printf("--------------------------- \n");
         
-
+        // get n
         int n = all_subset_sum_problems[i].n;  
         printf("n =  %i\n\n",n);
+        // get p and sums
         integer_t *p = all_subset_sum_problems[i].p;    
         integer_t *sums = all_subset_sum_problems[i].sums;    
+
+        //create space to store results
         char comb_bin[n+1];
 
+        
         double dt = 0;   
+        // loop for sums
         for(int j = 0;j < n_sums;j++)
         {   
             integer_t sum = all_subset_sum_problems[i].sums[j];
 
+            // run function and take time 
             double tmp_dt = cpu_time();   
             int comb = BruteForce(n, p, sums, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
 
-            
+            // print results
             printf("%d,  %lld -> %s\n", j ,sum, Converter(n, comb, comb_bin));
         }
 
+        // store times 
         fprintf(fp,"%i %f \n",n, dt);
 
     }
