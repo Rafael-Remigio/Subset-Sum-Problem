@@ -1,0 +1,4 @@
+recursiva -remigio
+recursiva inteligente
+meet in the midle (Horowitz and Sahni)
+opcional versao mais complexa de meet in the midle using less memory (Schroeppel and Shamir)

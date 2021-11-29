@@ -7,12 +7,12 @@
 #define n_sums      20
 #define n_problems  (max_n - min_n + 1)
 
-int BruteForce(int n, integer_t *p, integer_t *sums, integer_t desired_sum){
+int Bf_Iter(int n, integer_t *p, integer_t *sums, integer_t desired_sum){
     
     int comb = 0;
     integer_t test_sum;
 
-    for(comb=0;comb<(1<<n);comb++){
+    for(comb;comb<(1<<n);comb++){
         test_sum =0;
 
         for(int bit=0; bit<n ;bit++){
@@ -41,7 +41,8 @@ int main(void)
 {           
     /* Setting up file */
     FILE *fp = NULL;
-    
+	
+	remove("data.log");    
     /* Open for the first time the file provided as argument */
     fp = fopen("data.log", "a");
 
@@ -81,7 +82,7 @@ int main(void)
 
             // run function and take time 
             double tmp_dt = cpu_time();   
-            int comb = BruteForce(n, p, sums, sum);
+            int comb = Bf_Iter(n, p, sums, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
 
