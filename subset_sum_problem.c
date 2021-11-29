@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../P02/elapsed_time.h"
+#include "elapsed_time.h"
 #include STUDENT_H_FILE
 
 
