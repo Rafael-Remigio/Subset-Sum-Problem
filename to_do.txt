@@ -2,3 +2,17 @@ recursiva -remigio
 recursiva inteligente
 meet in the midle (Horowitz and Sahni)
 opcional versao mais complexa de meet in the midle using less memory (Schroeppel and Shamir)
+
+smart recursive
+começar a ler o array dos maiores para os mais pequenos e se a soma for maior cortar logo a soma
+		prunning e o termo
+		
+
+sami shit
+	para encontrar todas as subsomas de conjuntos
+	dividir o array p em 2 array e em cada subarray gerar todos as subsomas e a partir desses subconjuntos e so gerar os valores da soma dos subconjuntos de casa
+	gasta mais memoria mas tem big O de ordem n
+
+shamir
+	nem o stor lavrador sabe ainda
+		tamos fodidos
