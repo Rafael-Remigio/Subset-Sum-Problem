@@ -26,41 +26,24 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
     return comb;
     
 }
+ 
 
-
-int Bf_recur(int n, integer_t *p, integer_t desired_sum,int i,int current_sum,int current_comb){
-    if (p[i] == p[n-1]) {
-        if (current_sum + 1 * p[i] == desired_sum){   
-            //change combination here
-            return current_comb;
-        }
-        return current_comb + 0 * p[i];
-    }
-
-    if (current_sum + 0 * p[i]  == desired_sum){
-        return current_comb;
-    }
-/*     else if (current_sum + 1 * p[i]  == desired_sum){
-        return current_comb * ;
-    } */
-
-}
-
-int print_all_sums_recursive(unsigned int n,unsigned int m,integer_t *p,double sum,unsigned long mask,integer_t desired_sum)
+int Bf_recur(unsigned int n,unsigned int m,integer_t *p,double sum,unsigned long mask,integer_t desired_sum)
 {
     if(m == n)
     { // nothing more to do; print sum
         unsigned int i,j;
         if (sum == desired_sum){
-            printf("\n %lu \n",mask);
+             printf("\n %d \n",mask);
             return mask;
             
         }
+        
     }
     else
     {
-        print_all_sums_recursive(n,m + 1u,p,sum ,mask ,desired_sum); // do not use a[m]
-        print_all_sums_recursive(n,m + 1u,p,sum + p[m],mask | (1ul << m),desired_sum); // use a[m]
+        Bf_recur(n,m + 1u,p,sum ,mask ,desired_sum);                        // do not use a[m]
+        Bf_recur(n,m + 1u,p,sum + p[m],mask | (1ul << m),desired_sum);      // use a[m]
     }
 }
 
@@ -98,7 +81,7 @@ int main(void)
      
 
    // start looping for n's
-   /*  for(int i = 0;i < 15;i++)
+    for(int i = 0;i < 1;i++)
     {
         printf("--------------------------- \n");
         
@@ -122,18 +105,21 @@ int main(void)
             // run function and take time 
             double tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
+            int comb_rec = Bf_recur(n,0, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
 
             // print results
-            printf("%d,  %lld -> %s\n", j ,sum, Converter(n, comb, comb_bin));
+            printf("%d,  %lld -> %d / %d\n", j ,sum, comb,  comb_rec);
         }
 
         // store times 
         fprintf(fp,"%i %f \n",n, dt);
 
-    }   */
+    }   
 
+
+    /*
      for(int i = 0;i < 15;i++)
     {
         printf("--------------------------- \n");
@@ -156,6 +142,6 @@ int main(void)
     } 
     return 0;
 
-    
+    */
     
 }
