@@ -50,6 +50,29 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
     return stuff;
 }
 
+int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_t desired_sum)
+{  
+    if(sum > desired_sum){
+        return 0;
+    }
+
+    if(m == 0)
+    { // nothing more to do; print sum
+        if (sum == desired_sum){
+            return comb;
+            
+        }
+        else return 0;
+    }
+
+    
+    int stuff = Bf_recur_smart(n,m - 1,p,sum , comb ,desired_sum);  
+    if (stuff == 0)  {                 
+        return Bf_recur_smart(n,m - 1,p,sum + p[m] ,comb+ pow(2,n-m),desired_sum);      
+    }   
+    return stuff;
+}
+
 
 
 char *Converter(int n,int x, char *sol){
@@ -108,11 +131,12 @@ int main(void)
             double tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
             int comb_rec= Bf_recur(n,0, p,0,0,sum);
+            int comb_smart= Bf_recur_smart(n,n, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
 
             // print results
-            printf("%d,  %lld -> %d / %d\n", j ,sum, comb, comb_rec);
+            printf("%d,  %lld -> %s / %s / %s\n", j ,sum, Converter(n, comb, comb_bin), Converter(n, comb_rec, comb_bin),  Converter(n, comb_smart, comb_bin));
         }
 
         // store times 
