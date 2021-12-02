@@ -1,7 +1,7 @@
 #include <stdio.h> 
 #include "elapsed_time.h"
 #include "000000.h"
-
+#include <string.h>
 #define min_n       10
 #define max_n       57
 #define n_sums      20
@@ -28,23 +28,25 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
 }
  
 
-int Bf_recur(unsigned int n,unsigned int m,integer_t *p,double sum,unsigned long mask,integer_t desired_sum)
-{
+const char* Bf_recur(unsigned int n,unsigned int m,integer_t *p,double sum, char* comb,integer_t desired_sum)
+{   
     if(m == n)
     { // nothing more to do; print sum
-        unsigned int i,j;
         if (sum == desired_sum){
-             printf("\n %d \n",mask);
-            return mask;
+            printf("---%f---%s----",sum,&comb);
+            return comb;
             
         }
-        
+        else return "NULL";
     }
-    else
-    {
-        Bf_recur(n,m + 1u,p,sum ,mask ,desired_sum);                        // do not use a[m]
-        Bf_recur(n,m + 1u,p,sum + p[m],mask | (1ul << m),desired_sum);      // use a[m]
-    }
+
+    
+    char *stuff = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
+    if (stuff == "NULL" )                      
+        strncat(&comb, "1" , 1);
+        return Bf_recur(n,m + 1u,p,sum + 1 * p[m],comb,desired_sum);      
+
+    return stuff;
 }
 
 
@@ -95,7 +97,6 @@ int main(void)
         //create space to store results
         char comb_bin[n+1];
 
-        
         double dt = 0;   
         // loop for sums
         for(int j = 0;j < n_sums;j++)
@@ -105,12 +106,12 @@ int main(void)
             // run function and take time 
             double tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
-            int comb_rec = Bf_recur(n,0, p,0,0,sum);
+            char *comb_rec= Bf_recur(n,0, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
 
             // print results
-            printf("%d,  %lld -> %d / %d\n", j ,sum, comb,  comb_rec);
+            printf("%d,  %lld -> %d / %s\n", j ,sum, comb, comb_rec);
         }
 
         // store times 
