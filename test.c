@@ -2,6 +2,7 @@
 #include "elapsed_time.h"
 #include "000000.h"
 #include <string.h>
+#include <math.h>
 #define min_n       10
 #define max_n       57
 #define n_sums      20
@@ -28,24 +29,24 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
 }
  
 
-const char* Bf_recur(unsigned int n,unsigned int m,integer_t *p,double sum, char* comb,integer_t desired_sum)
+int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,integer_t desired_sum)
 {   
+    
     if(m == n)
     { // nothing more to do; print sum
         if (sum == desired_sum){
-            printf("---%f---%s----",sum,&comb);
             return comb;
             
         }
-        else return "NULL";
+        else return 0;
     }
 
     
-    char *stuff = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
-    if (stuff == "NULL" )                      
-        strncat(&comb, "1" , 1);
-        return Bf_recur(n,m + 1u,p,sum + 1 * p[m],comb,desired_sum);      
-
+    int stuff = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
+    if (stuff == 0)  {                 
+ 
+        return Bf_recur(n,m + 1u,p,sum + p[m] ,comb+ pow(2,m),desired_sum);      
+    }   
     return stuff;
 }
 
@@ -106,12 +107,12 @@ int main(void)
             // run function and take time 
             double tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
-            char *comb_rec= Bf_recur(n,0, p,0,0,sum);
+            int comb_rec= Bf_recur(n,0, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
 
             // print results
-            printf("%d,  %lld -> %d / %s\n", j ,sum, comb, comb_rec);
+            printf("%d,  %lld -> %d / %d\n", j ,sum, comb, comb_rec);
         }
 
         // store times 
