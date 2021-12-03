@@ -134,7 +134,7 @@ int main(void)
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
             // print results
-            printf("%d,  %lld -> %s  \n", j ,sum,   Converter(n, comb_smart, comb_bin));
+            printf("%d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
         }
 
         // store times 
