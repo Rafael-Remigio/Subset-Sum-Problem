@@ -35,7 +35,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)1592ull,
       (integer_t)1655ull
     },
-    {
+    {                        
       (integer_t)5963ull, // 0111111100
       (integer_t)5105ull, // 0111011100
       (integer_t)4376ull, // 1100100101

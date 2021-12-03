@@ -52,23 +52,22 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
 
 int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_t desired_sum)
 {  
+
+    if (sum == desired_sum){
+        return comb;
+    }
     if(sum > desired_sum){
         return 0;
     }
-
-    if(m == 0)
-    { // nothing more to do; print sum
-        if (sum == desired_sum){
-            return comb;
-            
-        }
-        else return 0;
+    if(m == -1)
+    { 
+        
+        return 0 ;
     }
-
-    
-    int stuff = Bf_recur_smart(n,m - 1,p,sum , comb ,desired_sum);  
+    int here = m-1;
+    int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,n-m-1),desired_sum);  
     if (stuff == 0)  {                 
-        return Bf_recur_smart(n,m - 1,p,sum + p[m] ,comb+ pow(2,n-m),desired_sum);      
+        return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
     return stuff;
 }
@@ -93,8 +92,8 @@ int main(void)
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
     fp = fopen("data.log", "a");
-
-
+    integer_t pi[5] = {1,3,5,7,8};
+    printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
     
     printf("\n");
     printf("Program configuration:\n");
@@ -131,12 +130,11 @@ int main(void)
             double tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
             int comb_rec= Bf_recur(n,0, p,0,0,sum);
-            int comb_smart= Bf_recur_smart(n,n, p,0,0,sum);
+            int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
-
             // print results
-            printf("%d,  %lld -> %s / %s / %s\n", j ,sum, Converter(n, comb, comb_bin), Converter(n, comb_rec, comb_bin),  Converter(n, comb_smart, comb_bin));
+            printf("%d,  %lld -> %s  \n", j ,sum,   Converter(n, comb_smart, comb_bin));
         }
 
         // store times 
