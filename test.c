@@ -54,6 +54,7 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
 {  
 
     if (sum == desired_sum){
+        printf("\nyee - %d\n",sum);
         return comb;
     }
     if(sum > desired_sum){
@@ -64,7 +65,7 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
         
         return 0 ;
     }
-    int here = m-1;
+
     int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,n-m-1),desired_sum);  
     if (stuff == 0)  {                 
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
@@ -106,7 +107,7 @@ int main(void)
      
 
    // start looping for n's
-    for(int i = 0;i < 1;i++)
+    for(int i = 0;i < 5;i++)
     {
         printf("--------------------------- \n");
         
