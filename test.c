@@ -54,7 +54,6 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
 {  
 
     if (sum == desired_sum){
-        printf("\nyee - %d and comb is %d\n",sum,comb);
         return comb;
     }
     if(sum > desired_sum){
@@ -135,7 +134,11 @@ int main(void)
             tmp_dt = cpu_time() - tmp_dt;
             dt += tmp_dt;
             // print results
-            printf("%d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
+            printf("-------------------------------------------------\n");
+            printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+            printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+            printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
+            
         }
 
         // store times 
