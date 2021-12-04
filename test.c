@@ -1,4 +1,6 @@
 #include <stdio.h> 
+#include <stdlib.h>
+
 #include "elapsed_time.h"
 #include "000000.h"
 #include <string.h>
@@ -72,6 +74,169 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
     return stuff;
 }
 
+ 
+
+void merge(integer_t arr[], int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+  
+    /* create temp arrays */
+    int L[n1], R[n2];
+  
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+  
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+  
+    /* Copy the remaining elements of L[], if there
+    are any */
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+  
+    /* Copy the remaining elements of R[], if there
+    are any */
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+  
+ 
+void mergeSort(integer_t arr[], int l, int r)
+{
+    if (l < r) {
+        // Same as (l+r)/2, but avoids overflow for
+        // large l and h
+        int m = l + (r - l) / 2;
+  
+        // Sort first and second halves
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+  
+        merge(arr, l, m, r);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+void calcsubarray(integer_t a[], integer_t x[], int n, int c)
+{
+    for (int i=0; i<(1<<n); i++)
+    {
+        integer_t s = 0;
+        for (int j=0; j<n; j++)
+            if (i & (1<<j))
+                s += a[j+c];
+        if(s > 0){
+          x[i] = s;  
+        }
+        
+    }
+} 
+
+
+// insertion sort q roubei so prar 
+void Sort(integer_t arr[], int n)
+{
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+  
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+
+
+int mitm(int n, integer_t *p, integer_t desired_sum){
+
+    // arranja espaço para as somas
+    integer_t *X = malloc((pow(3,n/2))*sizeof(integer_t));
+    integer_t *Y = malloc((pow(3,n/2))*sizeof(integer_t));
+    /*
+        integer_t a[n/2];
+        memcpy(a, p, (n/2) * sizeof(integer_t));
+        integer_t b[(n+1)/2];
+        memcpy(b, &p[(n/2)], ((n+1)/2) * sizeof(integer_t));
+    */
+
+ 
+    // enche os arrays com as somas respetivas
+    calcsubarray(p, X, n/2, 0);
+    calcsubarray(p, Y, n-n/2, n/2);
+
+    // pega o tamanho
+    int size_X = 1<<(n/2);
+    int size_Y = 1<<(n-n/2);
+
+ 
+    // Sorta os arrays (Acho que isto pode ser o problema)
+    Sort(X, size_X);
+    Sort(Y, size_Y);
+
+    printf("\n size = %d \n", size_Y);
+   
+    integer_t max;
+
+    
+    // loopa comparando e tal (como o stor explicou)
+    for(int i=0; i< size_X;){
+        for(int j=size_Y -1; j>=0;){
+            
+            if(X[i]+Y[j] == desired_sum ){ 
+                return 1;   // retorna 1 se deu bom 
+            }else if(X[i]+Y[j] < desired_sum){
+                i++;
+            }else if(X[i]+Y[j] > desired_sum){
+                j--;
+            } 
+           max = X[i]+Y[j];
+        }
+        return max; //retorna a ultima soma se deu merda
+    }
+
+    // liberta o espaco
+    free(X);
+    free(Y);
+
+    return 0;
+}
+
 
 
 char *Converter(int n,int x, char *sol){
@@ -110,7 +275,7 @@ int main(void)
      
 
    // start looping for n's
-    for(int i = 0;i < 14;i++)
+    for(int i = 0;i < n_problems;i++)
     {
         printf("--------------------------- \n");
         
@@ -134,26 +299,29 @@ int main(void)
 
             // run function and take time 
             double tmp_dt = cpu_time();   
-            int comb = Bf_Iter(n, p, sum);
+            //int comb = Bf_Iter(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i += tmp_dt;
 
             tmp_dt = cpu_time();   
-            int comb_rec= Bf_recur(n,0, p,0,0,sum);
+            //int comb_rec= Bf_recur(n,0, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_r += tmp_dt;
 
             tmp_dt = cpu_time();   
-            int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
+            //int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i_s += tmp_dt;
 
+            int x= mitm(n, p, sum);
  
             // print results
             printf("-------------------------------------------------\n");
-            printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
-            printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
+            //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+            //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+            //printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
+            //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
+            printf("Meet in the middle      %d,  %lld || %i ->  \n", j ,sum, x);
             
         }
 
