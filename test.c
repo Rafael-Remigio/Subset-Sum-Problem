@@ -87,11 +87,15 @@ char *Converter(int n,int x, char *sol){
 int main(void)
 {           
     /* Setting up file */
-    FILE *fp = NULL;
+    FILE *fp_1 = NULL;
+    FILE *fp_2 = NULL;
+    FILE *fp_3 = NULL;
 	
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
-    fp = fopen("data.log", "a");
+    fp_1 = fopen("data_1.log", "a");
+    fp_2 = fopen("data_2.log", "a");
+    fp_3 = fopen("data_3.log", "a");
     integer_t pi[5] = {1,3,5,7,8};
     printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
     
@@ -106,7 +110,7 @@ int main(void)
      
 
    // start looping for n's
-    for(int i = 0;i < 5;i++)
+    for(int i = 0;i < 14;i++)
     {
         printf("--------------------------- \n");
         
@@ -120,7 +124,9 @@ int main(void)
         //create space to store results
         char comb_bin[n+1];
 
-        double dt = 0;   
+        double dt_bf_i = 0;  
+        double dt_bf_r = 0;
+        double dt_bf_i_s = 0;     
         // loop for sums
         for(int j = 0;j < n_sums;j++)
         {   
@@ -129,10 +135,20 @@ int main(void)
             // run function and take time 
             double tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
+            tmp_dt = cpu_time() - tmp_dt;
+            dt_bf_i += tmp_dt;
+
+            tmp_dt = cpu_time();   
             int comb_rec= Bf_recur(n,0, p,0,0,sum);
+            tmp_dt = cpu_time() - tmp_dt;
+            dt_bf_r += tmp_dt;
+
+            tmp_dt = cpu_time();   
             int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
-            dt += tmp_dt;
+            dt_bf_i_s += tmp_dt;
+
+ 
             // print results
             printf("-------------------------------------------------\n");
             printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
@@ -142,7 +158,9 @@ int main(void)
         }
 
         // store times 
-        fprintf(fp,"%i %f \n",n, dt);
+        fprintf(fp_1,"%i %f \n",n, dt_bf_i);
+        fprintf(fp_2,"%i %f \n",n, dt_bf_r);
+        fprintf(fp_3,"%i %f \n",n, dt_bf_i_s);
 
     }   
 
