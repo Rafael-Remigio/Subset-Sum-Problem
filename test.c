@@ -33,7 +33,7 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
 {   
     
     if(m == n)
-    { // nothing more to do; print sum
+    {
         if (sum == desired_sum){
             return comb;
             
@@ -54,7 +54,7 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
 {  
 
     if (sum == desired_sum){
-        printf("\nyee - %d\n",sum);
+        printf("\nyee - %d and comb is %d\n",sum,comb);
         return comb;
     }
     if(sum > desired_sum){
@@ -66,7 +66,7 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
         return 0 ;
     }
 
-    int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,n-m-1),desired_sum);  
+    int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,m),desired_sum);  
     if (stuff == 0)  {                 
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
