@@ -1102,7 +1102,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)12266908179ull,
       (integer_t)12744997125ull
     },
-    {
+    {                             
       (integer_t)135751811134ull, // 00101111000111001101110110011110
       (integer_t)85800219819ull, // 10011000101000110010110001000011
       (integer_t)115760532967ull, // 10111101001101100101001011010110
@@ -1369,7 +1369,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)1188915355983ull, // 101000001011011100101000001110010001
       (integer_t)1243324832750ull, // 011000001101001101011010011101000001
       (integer_t)1329939491011ull // 001001011001010000100110001001101110
-    }
+    }                              
   },
   {
     37,

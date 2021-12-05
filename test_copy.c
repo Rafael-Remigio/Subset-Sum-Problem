@@ -76,7 +76,7 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
 
  
 
-void merge(integer_t arr[], integer_t a[], int l, int m, int r)
+void merge(integer_t arr[], integer_t a[], integer_t l, integer_t m, integer_t r)
 {
     integer_t i, j, k;
     integer_t n1 = m - l + 1;
@@ -106,7 +106,7 @@ void merge(integer_t arr[], integer_t a[], int l, int m, int r)
         }
         else {
             arr[k] = R[j];
-            a[k] = R_2[i];
+            a[k] = R_2[j];
             j++;
         }
         k++;
@@ -132,7 +132,7 @@ void merge(integer_t arr[], integer_t a[], int l, int m, int r)
 }
   
  
-void mergeSort(integer_t arr[],integer_t a[], int l, int r)
+void mergeSort(integer_t arr[],integer_t a[], integer_t l, integer_t r)
 {
     if (l < r) {
         // Same as (l+r)/2, but avoids overflow for
@@ -213,8 +213,8 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     integer_t *X = malloc(size_X*sizeof(integer_t));
     integer_t *Y = malloc(size_Y*sizeof(integer_t));
 
-    integer_t *a = malloc(size_X*sizeof(integer_t));
-    integer_t *b = malloc(size_X*sizeof(integer_t));
+    integer_t *a = malloc(2*size_X*sizeof(integer_t));
+    integer_t *b = malloc(2*size_X*sizeof(integer_t));
 
     
      
@@ -235,14 +235,10 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
    
 
  
-    // Sorta os arrays (Acho que isto pode ser o problema)
-    //mergeSort(X,a, 0, size_X-1);
-    //mergeSort(Y,b, 0, size_Y-1);
+    // Sorta os arrays  
+    mergeSort(X,a, 0, size_X-1);
+    mergeSort(Y,b, 0, size_Y-1);
 
-    Sort(X,a, size_X);
-    Sort(Y,b, size_Y);
-
-     
  
 
    
@@ -254,8 +250,7 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
         for(integer_t j=size_Y -1; j>=0;){
             
             if(X[i]+Y[j] == desired_sum ){ 
-
-                printf("\n %lld + %lld = %lld\n", X[i], Y[j], desired_sum);
+                //printf("\n %lld + %lld = %lld\n", X[i], Y[j], desired_sum);
                 return a[i] + b[j];   
             }else if(X[i]+Y[j] < desired_sum){
                 i++;
@@ -342,7 +337,7 @@ int main(void)
 
             // run function and take time 
             double tmp_dt = cpu_time();   
-            int comb = Bf_Iter(n, p, sum);
+            //int comb = Bf_Iter(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i += tmp_dt;
 
@@ -364,7 +359,7 @@ int main(void)
  
             // print results
             printf("-------------------------------------------------\n");
-            printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+            //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
             //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
             //printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
             //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));

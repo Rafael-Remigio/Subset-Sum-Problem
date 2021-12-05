@@ -76,13 +76,15 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
 
  
 
-void merge(integer_t arr[], int l, int m, int r)
+void merge(integer_t arr[], integer_t l, integer_t m, integer_t r)
 {
     integer_t i, j, k;
     integer_t n1 = m - l + 1;
     integer_t n2 = r - m;
   
     /* create temp arrays */
+    //integer_t *L = malloc(200000);
+    //integer_t *R = malloc(200000); 
     integer_t L[n1], R[n2];
   
     /* Copy data to temp arrays L[] and R[] */
@@ -125,8 +127,10 @@ void merge(integer_t arr[], int l, int m, int r)
 }
   
  
-void mergeSort(integer_t arr[], int l, int r)
+void mergeSort(integer_t arr[], integer_t l, integer_t r)
 {
+
+      
     if (l < r) {
         // Same as (l+r)/2, but avoids overflow for
         // large l and h
@@ -190,16 +194,22 @@ void Sort(integer_t arr[], integer_t n)
 
 
 
-int mitm(int n, integer_t *p, integer_t desired_sum){
+int mitm(int n, integer_t *p, integer_t *X, integer_t *Y, integer_t desired_sum){
  
     // pega o tamanho
     integer_t size_X = 1<<(n/2);
     integer_t size_Y = 1<<(n-n/2);
 
+    
+
 
     // arranja espaço para as somas
-    integer_t *X = malloc(size_X*sizeof(integer_t));
-    integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
+    //integer_t *X = malloc(size_X*sizeof(integer_t));
+    //integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
+
+    // tmb devia funcionar;
+    //integer_t X[size_X];
+    //integer_t Y[size_Y]; 
 
     
      
@@ -218,13 +228,14 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     calcsubarray(p, Y,  n-n/2, n/2);
 
    
-
+    
  
     // Sorta os arrays (Acho que isto pode ser o problema)
-    mergeSort(X, 0, size_X-1);
-    mergeSort(Y, 0, size_Y-1);
+    mergeSort(X, 0, size_X);
+    mergeSort(Y, 0, size_Y);
 
-
+    //Sort(X, size_X);
+    //Sort(Y, size_Y);
      
  
 
@@ -237,7 +248,9 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
         for(integer_t j=size_Y -1; j>=0;){
             
             if(X[i]+Y[j] == desired_sum ){ 
- 
+                // liberta o espaco
+                //free(Y);
+                //free(X);
                 return 1;   
             }else if(X[i]+Y[j] < desired_sum){
                 i++;
@@ -246,12 +259,7 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
             } 
            max = X[i]+Y[j];
         }
-        return max; //retorna a ultima soma se deu merda
     }
-
-    // liberta o espaco
-    free(X);
-    free(Y);
 
     return 0;
 }
@@ -270,6 +278,10 @@ char *Converter(int n,int x, char *sol){
 
 int main(void)
 {           
+
+    integer_t *X = malloc(2000000000);
+    integer_t *Y = malloc(2000000000); 
+
     /* Setting up file */
     FILE *fp_1 = NULL;
     FILE *fp_2 = NULL;
@@ -338,7 +350,7 @@ int main(void)
 
             tmp_dt = cpu_time();   
            
-            int x= mitm(n, p, sum);
+            int x= mitm(n, p, X, Y, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_mitm += tmp_dt;
  
@@ -348,7 +360,7 @@ int main(void)
             //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
             //printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
             //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
-            printf("Meet in the middle      %d,  %lld || %i -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
+            printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
             
         }
 
