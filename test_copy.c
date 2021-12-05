@@ -157,14 +157,17 @@ void mergeSort(integer_t arr[],integer_t a[], int l, int r)
 
 
 void calcsubarray(integer_t a[], integer_t x[], integer_t b[], int n, int c)
-{
+{   
+    // para cada soma 
     for (integer_t i=0; i<(1<<n); i++)
     {
         integer_t s = 0;
+        // para cada p[]
         for (integer_t j=0; j<n; j++){
+            // se i tiver alguma coisa em comum com 2^j
             if (i & (1<<j)){
                 s += a[j+c];
-                b[i] += pow(2, j);
+                b[i] += pow(2, j+c);
             }    
                  
         }
@@ -172,28 +175,28 @@ void calcsubarray(integer_t a[], integer_t x[], integer_t b[], int n, int c)
           x[i] = s;  
         }
 
-        b[i] = b[i]<<c;
-
         
 
-        
     }
 } 
 
 
 // insertion sort q roubei so prar 
-void Sort(integer_t arr[], integer_t n)
+void Sort(integer_t arr[],integer_t a[], integer_t n)
 {
-    integer_t i, key, j;
+    integer_t i, key, key_2, j;
     for (i = 1; i < n; i++) {
         key = arr[i];
+        key_2 = a[i];
         j = i - 1;
   
         while (j >= 0 && arr[j] > key) {
             arr[j + 1] = arr[j];
+            a[j + 1] = a[j];
             j = j - 1;
         }
         arr[j + 1] = key;
+        a[j + 1] = key_2;
     }
 }
 
@@ -233,9 +236,11 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
 
  
     // Sorta os arrays (Acho que isto pode ser o problema)
-    mergeSort(X,a, 0, size_X-1);
-    mergeSort(Y,b, 0, size_Y-1);
+    //mergeSort(X,a, 0, size_X-1);
+    //mergeSort(Y,b, 0, size_Y-1);
 
+    Sort(X,a, size_X);
+    Sort(Y,b, size_Y);
 
      
  
@@ -265,6 +270,8 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     // liberta o espaco
     free(X);
     free(Y);
+    free(a);
+    free(b);
 
     return 0;
 }
