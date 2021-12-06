@@ -63,11 +63,12 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
     }
     if(m == -1)
     { 
-        
         return 0 ;
     }
 
+    
     int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,m),desired_sum);  
+    
     if (stuff == 0)  {                 
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
@@ -153,23 +154,22 @@ void mergeSort(integer_t arr[], integer_t l, integer_t r)
 
 
 
+
 void calcsubarray(integer_t a[], integer_t x[], int n, int c)
 {
+    integer_t s;
     for (integer_t i=0; i<(1<<n); i++)
     {
-        integer_t s = 0;
+        s = 0;
         for (integer_t j=0; j<n; j++){
             if (i & (1<<j)){
                 s += a[j+c];
             }    
                  
         }
-        if(s > 0){
+        if(s >= 0){
           x[i] = s;  
         }
-
-
-        
 
         
     }
@@ -192,9 +192,32 @@ void Sort(integer_t arr[], integer_t n)
     }
 }
 
+void merge_sort(integer_t *data,int first,int one_after_last)
+{
+    int i,j,k,middle;
+    integer_t *buffer;
+    if(one_after_last - first < 40) // do not allocate less than 40 bytes
+        Sort(data,one_after_last);
+    else{
+        middle = (first + one_after_last) / 2;
+        merge_sort(data,first,middle);
+        merge_sort(data,middle,one_after_last);
+        buffer = (integer_t *)malloc((size_t)(one_after_last - first) * sizeof(integer_t)) - first; // no error check!
+        i = first; // first input (first half)
+        j = middle; // second input (second half)
+        k = first; // merged output
+        while(k < one_after_last)
+            if(j == one_after_last || (i < middle && data[i] <= data[j]))
+                buffer[k++] = data[i++];
+            else
+                buffer[k++] = data[j++];
+        for(i = first;i < one_after_last;i++)
+            data[i] = buffer[i];
+        free(buffer + first);
+    }
+}
 
-
-int mitm(int n, integer_t *p, integer_t *X, integer_t *Y, integer_t desired_sum){
+int mitm(int n, integer_t *p, integer_t desired_sum){
  
     // pega o tamanho
     integer_t size_X = 1<<(n/2);
@@ -204,8 +227,14 @@ int mitm(int n, integer_t *p, integer_t *X, integer_t *Y, integer_t desired_sum)
 
 
     // arranja espaço para as somas
-    //integer_t *X = malloc(size_X*sizeof(integer_t));
-    //integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
+    integer_t *X = malloc(size_X*sizeof(integer_t));
+    if(X == NULL){
+        fprintf(stderr,"Falta de espaço para X");
+    }
+    integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
+    if(Y == NULL){
+        fprintf(stderr,"Falta de espaço para Y");
+    }
 
     // tmb devia funcionar;
     //integer_t X[size_X];
@@ -221,43 +250,38 @@ int mitm(int n, integer_t *p, integer_t *X, integer_t *Y, integer_t desired_sum)
         integer_t b[(n+1)/2];
         memcpy(b, &p[(n/2)], ((n+1)/2) * sizeof(integer_t));
     */
-
+    
  
     // enche os arrays com as somas respetivas
     calcsubarray(p, X, n/2, 0);
     calcsubarray(p, Y,  n-n/2, n/2);
-
-   
+     
     
+   
  
     // Sorta os arrays (Acho que isto pode ser o problema)
-    mergeSort(X, 0, size_X);
-    mergeSort(Y, 0, size_Y);
-
+    merge_sort(X, 0, size_X);
+    merge_sort(Y, 0, size_Y);
+    
     //Sort(X, size_X);
     //Sort(Y, size_Y);
      
- 
-
    
-    integer_t max;
-
     
     // loopa comparando e tal (como o stor explicou)
     for(integer_t i=0; i< size_X;){
         for(integer_t j=size_Y -1; j>=0;){
             
             if(X[i]+Y[j] == desired_sum ){ 
-                // liberta o espaco
-                //free(Y);
-                //free(X);
+                free(X);
+                free(Y);
                 return 1;   
             }else if(X[i]+Y[j] < desired_sum){
                 i++;
             }else if(X[i]+Y[j] > desired_sum){
                 j--;
             } 
-           max = X[i]+Y[j];
+        
         }
     }
 
@@ -279,8 +303,8 @@ char *Converter(int n,int x, char *sol){
 int main(void)
 {           
 
-    integer_t *X = malloc(2000000000);
-    integer_t *Y = malloc(2000000000); 
+    //integer_t *X = malloc(2000000000);
+    //integer_t *Y = malloc(2000000000); 
 
     /* Setting up file */
     FILE *fp_1 = NULL;
@@ -350,7 +374,7 @@ int main(void)
 
             tmp_dt = cpu_time();   
            
-            int x= mitm(n, p, X, Y, sum);
+            int x= mitm(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_mitm += tmp_dt;
  

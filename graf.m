@@ -1,4 +1,5 @@
 clear;
+close all;
 clc;
 
 A_1 = load("data_1.log");
@@ -21,7 +22,6 @@ n_V1_4 = A_4(:, 1);
 f_V1_4 = A_4(:, 2);
 
 
-plot(n_V1_1, log(f_V1_1), n_V1_2, log(f_V1_2), n_V1_3, log(f_V1_3), n_V1_4, log(f_V1_4));
-
-xlim([0,60]);
-ylim([-14,9]);
+semilogy(n_V1_1, f_V1_1, n_V1_2, f_V1_2, n_V1_3, f_V1_3, n_V1_4, f_V1_4);
+grid on
+xlim([0,60]); 
