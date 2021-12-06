@@ -30,9 +30,7 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
     
 }
  
-
-int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,integer_t desired_sum)
-{   
+int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,integer_t desired_sum){
     
     if(m == n)
     {
@@ -52,8 +50,7 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
     return stuff;
 }
 
-int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_t desired_sum)
-{  
+int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_t desired_sum){ 
 
     if (sum == desired_sum){
         return comb;
@@ -75,110 +72,30 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
     return stuff;
 }
 
- 
-
-void merge(integer_t arr[], integer_t l, integer_t m, integer_t r)
-{
-    integer_t i, j, k;
-    integer_t n1 = m - l + 1;
-    integer_t n2 = r - m;
   
-    /* create temp arrays */
-    //integer_t *L = malloc(200000);
-    //integer_t *R = malloc(200000); 
-    integer_t L[n1], R[n2];
-  
-    /* Copy data to temp arrays L[] and R[] */
-    for (i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
-  
-    /* Merge the temp arrays back into arr[l..r]*/
-    i = 0; // Initial index of first subarray
-    j = 0; // Initial index of second subarray
-    k = l; // Initial index of merged subarray
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-  
-    /* Copy the remaining elements of L[], if there
-    are any */
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-  
-    /* Copy the remaining elements of R[], if there
-    are any */
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-  
- 
-void mergeSort(integer_t arr[], integer_t l, integer_t r)
-{
 
-      
-    if (l < r) {
-        // Same as (l+r)/2, but avoids overflow for
-        // large l and h
-        integer_t m = l + (r - l) / 2;
-  
-        // Sort first and second halves
-        mergeSort(arr, l, m);
-        mergeSort(arr, m + 1, r);
-  
-        merge(arr, l, m, r);
-    }
-}
+void calcsubarray(integer_t a[], integer_t x[], int n, int c){
 
-
-
-
-
-
-
-
-
-
-
-void calcsubarray(integer_t a[], integer_t x[], int n, int c)
-{
     integer_t s;
-    for (integer_t i=0; i<(1<<n); i++)
+    for (int i=0; i<(1<<n); i++)
     {
         s = 0;
-        for (integer_t j=0; j<n; j++){
+        for (int j=0; j<n; j++){
             if (i & (1<<j)){
                 s += a[j+c];
             }    
-                 
         }
         if(s >= 0){
           x[i] = s;  
         }
-
-        
     }
 } 
+ 
 
 
 // insertion sort q roubei so prar 
-void Sort(integer_t arr[], integer_t n)
-{
+void Sort(integer_t arr[], integer_t n){
+
     integer_t i, key, j;
     for (i = 1; i < n; i++) {
         key = arr[i];
@@ -192,8 +109,8 @@ void Sort(integer_t arr[], integer_t n)
     }
 }
 
-void merge_sort(integer_t *data,int first,int one_after_last)
-{
+void merge_sort(integer_t *data,int first,int one_after_last){
+
     int i,j,k,middle;
     integer_t *buffer;
     if(one_after_last - first < 40) // do not allocate less than 40 bytes
@@ -216,73 +133,82 @@ void merge_sort(integer_t *data,int first,int one_after_last)
         free(buffer + first);
     }
 }
+ 
+void swap(integer_t *a, integer_t *b) {
+    integer_t temp = *a;
+    *a = *b;
+    *b = temp;
+  }
+  
+  void heapify(integer_t arr[], int n, int i) {
+    // Find largest among root, left child and right child
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+  
+    if (left < n && arr[left] > arr[largest])
+      largest = left;
+  
+    if (right < n && arr[right] > arr[largest])
+      largest = right;
+  
+    // Swap and continue heapifying if root is not largest
+    if (largest != i) {
+      swap(&arr[i], &arr[largest]);
+      heapify(arr, n, largest);
+    }
+  }
+  
+  // Main function to do heap sort
+  void heapSort(integer_t arr[], int n) {
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+      heapify(arr, n, i);
+  
+    // Heap sort
+    for (int i = n - 1; i >= 0; i--) {
+      swap(&arr[0], &arr[i]);
+  
+      // Heapify root element to get highest element at root again
+      heapify(arr, i, 0);
+    }
+  }
 
 int mitm(int n, integer_t *p, integer_t desired_sum){
  
     // pega o tamanho
-    integer_t size_X = 1<<(n/2);
-    integer_t size_Y = 1<<(n-n/2);
-
+    int size_X = 1<<(n/2);
+    int size_Y = 1<<(n-n/2);
     
-
-
     // arranja espaço para as somas
     integer_t *X = malloc(size_X*sizeof(integer_t));
-    if(X == NULL){
-        fprintf(stderr,"Falta de espaço para X");
-    }
     integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
-    if(Y == NULL){
-        fprintf(stderr,"Falta de espaço para Y");
-    }
 
-    // tmb devia funcionar;
-    //integer_t X[size_X];
-    //integer_t Y[size_Y]; 
-
-    
-     
-
-    /*
-    
-        integer_t a[n/2];
-        memcpy(a, p, (n/2) * sizeof(integer_t));
-        integer_t b[(n+1)/2];
-        memcpy(b, &p[(n/2)], ((n+1)/2) * sizeof(integer_t));
-    */
-    
- 
     // enche os arrays com as somas respetivas
     calcsubarray(p, X, n/2, 0);
-    calcsubarray(p, Y,  n-n/2, n/2);
+    calcsubarray(p, Y, n-n/2, n/2);
      
-    
-   
- 
     // Sorta os arrays (Acho que isto pode ser o problema)
-    merge_sort(X, 0, size_X);
-    merge_sort(Y, 0, size_Y);
-    
-    //Sort(X, size_X);
-    //Sort(Y, size_Y);
+    heapSort(X, size_X);
+    heapSort(Y, size_Y);
      
-   
-    
     // loopa comparando e tal (como o stor explicou)
-    for(integer_t i=0; i< size_X;){
-        for(integer_t j=size_Y -1; j>=0;){
-            
-            if(X[i]+Y[j] == desired_sum ){ 
-                free(X);
-                free(Y);
-                return 1;   
-            }else if(X[i]+Y[j] < desired_sum){
-                i++;
-            }else if(X[i]+Y[j] > desired_sum){
-                j--;
-            } 
+
+    int i= 0;
+    int j= size_Y - 1;
+    while(i< size_X && j >= 0){
+        integer_t s = X[i]+Y[j]; 
+        if(s == desired_sum ){ 
+            free(X);
+            free(Y);
+            return 1;   
+        }else if(s < desired_sum){
+            i++;
+        }else{
+            j--;
+        } 
         
-        }
+        
     }
 
     return 0;
@@ -300,26 +226,24 @@ char *Converter(int n,int x, char *sol){
     return sol;
 }
 
-int main(void)
-{           
+int main(void){
 
-    //integer_t *X = malloc(2000000000);
-    //integer_t *Y = malloc(2000000000); 
 
+ 
     /* Setting up file */
-    FILE *fp_1 = NULL;
-    FILE *fp_2 = NULL;
-    FILE *fp_3 = NULL;
-    FILE *fp_4 = NULL;
+    //FILE *fp_1 = NULL;
+    //FILE *fp_2 = NULL;
+    //FILE *fp_3 = NULL;
+    //FILE *fp_4 = NULL;
 	
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
-    fp_1 = fopen("data_1.log", "a");
-    fp_2 = fopen("data_2.log", "a");
-    fp_3 = fopen("data_3.log", "a");
-    fp_4 = fopen("data_4.log", "a");
-    integer_t pi[5] = {1,3,5,7,8};
-    printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
+    //fp_1 = fopen("data_1.log", "a");
+    //fp_2 = fopen("data_2.log", "a");
+    //fp_3 = fopen("data_3.log", "a");
+    //fp_4 = fopen("data_4.log", "a");
+    //integer_t pi[5] = {1,3,5,7,8};
+    //printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
     
     printf("\n");
     printf("Program configuration:\n");
@@ -341,23 +265,27 @@ int main(void)
         printf("n =  %i\n\n",n);
         
         // get p and sums
-        integer_t *p = all_subset_sum_problems[i].p;    
-        integer_t *sums = all_subset_sum_problems[i].sums;    
+        integer_t *p = all_subset_sum_problems[i].p;     
 
         //create space to store results
-        char comb_bin[n+1];
+            //char comb_bin[n+1];
 
+        /*
         double dt_bf_i = 0;  
         double dt_bf_r = 0;
-        double dt_bf_i_s = 0;
+        double dt_bf_i_s = 0;*/
         double dt_mitm = 0;     
+        
+
         // loop for sums
         for(int j = 0;j < n_sums;j++)
         {   
             integer_t sum = all_subset_sum_problems[i].sums[j];
+            double tmp_dt;
 
+            /*
             // run function and take time 
-            double tmp_dt = cpu_time();   
+            tmp_dt = cpu_time();   
             //int comb = Bf_Iter(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i += tmp_dt;
@@ -372,9 +300,12 @@ int main(void)
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i_s += tmp_dt;
 
+            */
+
             tmp_dt = cpu_time();   
            
             int x= mitm(n, p, sum);
+            
             tmp_dt = cpu_time() - tmp_dt;
             dt_mitm += tmp_dt;
  
@@ -395,31 +326,5 @@ int main(void)
         //fprintf(fp_4,"%i %f \n",n, dt_mitm);
 
     }   
-
-
-    /*
-     for(int i = 0;i < 15;i++)
-    {
-        printf("--------------------------- \n");
- 
-        // get n
-        int n = all_subset_sum_problems[i].n;    
-        char comb_bin[n+1];
-        printf("n =  %i\n\n",n);
-        // get p and sums
-        integer_t *p = all_subset_sum_problems[i].p;    
-        integer_t *sums = all_subset_sum_problems[i].sums; 
-        
-        for(int j = 0;j < n_sums;j++){   
-            integer_t sum = all_subset_sum_problems[i].sums[j];
-            int combination = print_all_sums_recursive(n,0, p,0,0,sum);
-            printf("\nsoma = %llu --- solution = %s ", sum ,Converter(n, combination, comb_bin));
-
-        }
-
-    } 
-    return 0;
-
-    */
     
 }

@@ -162,17 +162,19 @@ void calcsubarray(integer_t a[], integer_t x[], integer_t b[], int n, int c)
     for (integer_t i=0; i<(1<<n); i++)
     {
         integer_t s = 0;
+        integer_t cmb = 0;
         // para cada p[]
         for (integer_t j=0; j<n; j++){
             // se i tiver alguma coisa em comum com 2^j
             if (i & (1<<j)){
                 s += a[j+c];
-                b[i] += pow(2, j+c);
+                cmb += pow(2, j+c);
             }    
                  
         }
-        if(s > 0){
+        if(s >= 0){
           x[i] = s;  
+          b[i] = cmb;  
         }
 
         
@@ -213,8 +215,8 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     integer_t *X = malloc(size_X*sizeof(integer_t));
     integer_t *Y = malloc(size_Y*sizeof(integer_t));
 
-    integer_t *a = malloc(2*size_X*sizeof(integer_t));
-    integer_t *b = malloc(2*size_X*sizeof(integer_t));
+    integer_t *a = malloc(size_X*sizeof(integer_t));
+    integer_t *b = malloc(size_Y*sizeof(integer_t));
 
     
      
@@ -239,34 +241,39 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     mergeSort(X,a, 0, size_X-1);
     mergeSort(Y,b, 0, size_Y-1);
 
- 
+    /*
+    printf("\n");
+    for(int i=0; i<size_X;i++){
+        printf("%lld, ", X[i]);
+        printf("%lld, ", a[i]);
+    }
+    printf("\n");
+    */
 
-   
-    integer_t max;
-
-    
     // loopa comparando e tal (como o stor explicou)
     for(integer_t i=0; i< size_X;){
         for(integer_t j=size_Y -1; j>=0;){
             
             if(X[i]+Y[j] == desired_sum ){ 
                 //printf("\n %lld + %lld = %lld\n", X[i], Y[j], desired_sum);
-                return a[i] + b[j];   
+                // liberta o espaco
+                free(X);
+                free(Y);
+                integer_t r = a[i] + b[j];
+                free(a);
+                free(b);
+                return r;   
             }else if(X[i]+Y[j] < desired_sum){
                 i++;
             }else if(X[i]+Y[j] > desired_sum){
                 j--;
             } 
-           max = X[i]+Y[j];
+           
         }
-        return max; //retorna a ultima soma se deu merda
+        
     }
 
-    // liberta o espaco
-    free(X);
-    free(Y);
-    free(a);
-    free(b);
+    
 
     return 0;
 }
