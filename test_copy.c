@@ -10,16 +10,16 @@
 #define n_sums      20
 #define n_problems  (max_n - min_n + 1)
 
-int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
+integer_t Bf_Iter(int n, integer_t *p, integer_t desired_sum){
 
-    int comb = 0;
+    integer_t comb = 0;
     integer_t test_sum;
 
     for(comb;comb<(1<<n);comb++){
         test_sum =0;
 
         for(int bit=0; bit<n ;bit++){
-            int mask = (1<<bit);
+            integer_t mask = (1<<bit);
             if((comb & mask)!=0){test_sum += p[bit];}
         }   
 
@@ -31,7 +31,7 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
 }
  
 
-int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,integer_t desired_sum)
+integer_t Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, integer_t comb,integer_t desired_sum)
 {   
     
     if(m == n)
@@ -44,7 +44,7 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
     }
 
     
-    int stuff = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
+    integer_t stuff = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
     if (stuff == 0)  {                 
  
         return Bf_recur(n,m + 1u,p,sum + p[m] ,comb+ pow(2,m),desired_sum);      
@@ -288,12 +288,12 @@ int main(void)
 
             // run function and take time 
             double tmp_dt = cpu_time();   
-            //int comb = Bf_Iter(n, p, sum);
+            //integer_t comb = Bf_Iter(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i += tmp_dt;
 
             tmp_dt = cpu_time();   
-            //int comb_rec= Bf_recur(n,0, p,0,0,sum);
+            //integer_t comb_rec= Bf_recur(n,0, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_r += tmp_dt;
 
@@ -310,8 +310,8 @@ int main(void)
  
             // print results
             printf("-------------------------------------------------\n");
-            //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
-            //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+            //printf("Brute force             %d,  %lld || %lld -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+            //printf("Brute force recursiva   %d,  %lld || %lld -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
             printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
             printf("Meet in the middle      %d,  %lld || %lld -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
             
