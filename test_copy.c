@@ -52,7 +52,7 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
     return stuff;
 }
 
-int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_t desired_sum)
+integer_t Bf_recur_smart( unsigned int n,int m,integer_t *p,integer_t sum, integer_t comb,integer_t desired_sum)
 {  
 
     if (sum == desired_sum){
@@ -67,7 +67,7 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
         return 0 ;
     }
 
-    int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,m),desired_sum);  
+    integer_t stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,m),desired_sum);  
     if (stuff == 0)  {                 
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
@@ -82,11 +82,11 @@ void swap(integer_t *a, integer_t *b) {
     *b = temp;
 }
   
-void heapify(integer_t arr[],integer_t a[], int n, int i) {
+void heapify(integer_t arr[],integer_t a[], int n, integer_t i) {
     // Find largest among root, left child and right child
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
+    integer_t largest = i;
+    integer_t left = 2 * i + 1;
+    integer_t right = 2 * i + 2;
   
     if (left < n && arr[left] > arr[largest])
       largest = left;
@@ -149,7 +149,7 @@ void calcsubarray(integer_t a[], integer_t x[], integer_t b[], int n, int c)
 } 
  
 
-int mitm(int n, integer_t *p, integer_t desired_sum){
+integer_t mitm(int n, integer_t *p, integer_t desired_sum){
  
     // pega o tamanho
     integer_t size_X = 1<<(n/2);
@@ -249,8 +249,7 @@ int main(void)
     fp_2 = fopen("data_2.log", "a");
     fp_3 = fopen("data_3.log", "a");
     fp_4 = fopen("data_4.log", "a");
-    integer_t pi[5] = {1,3,5,7,8};
-    printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
+    integer_t pi[5] = {1,3,5,7,8}; 
     
     printf("\n");
     printf("Program configuration:\n");
@@ -299,13 +298,13 @@ int main(void)
             dt_bf_r += tmp_dt;
 
             tmp_dt = cpu_time();   
-            int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
+            integer_t comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i_s += tmp_dt;
 
             tmp_dt = cpu_time();   
            
-            int x= mitm(n, p, sum);
+            integer_t x= mitm(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_mitm += tmp_dt;
  
@@ -313,8 +312,8 @@ int main(void)
             printf("-------------------------------------------------\n");
             //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
             //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
-            printf("Meet in the middle      %d,  %lld || %i -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
+            printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
+            printf("Meet in the middle      %d,  %lld || %lld -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
             
         }
 
