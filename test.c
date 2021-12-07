@@ -90,57 +90,16 @@ void calcsubarray(integer_t a[], integer_t x[], int n, int c){
         }
     }
 } 
- 
-
-
-// insertion sort q roubei so prar 
-void Sort(integer_t arr[], integer_t n){
-
-    integer_t i, key, j;
-    for (i = 1; i < n; i++) {
-        key = arr[i];
-        j = i - 1;
   
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-        arr[j + 1] = key;
-    }
-}
 
-void merge_sort(integer_t *data,int first,int one_after_last){
-
-    int i,j,k,middle;
-    integer_t *buffer;
-    if(one_after_last - first < 40) // do not allocate less than 40 bytes
-        Sort(data,one_after_last);
-    else{
-        middle = (first + one_after_last) / 2;
-        merge_sort(data,first,middle);
-        merge_sort(data,middle,one_after_last);
-        buffer = (integer_t *)malloc((size_t)(one_after_last - first) * sizeof(integer_t)) - first; // no error check!
-        i = first; // first input (first half)
-        j = middle; // second input (second half)
-        k = first; // merged output
-        while(k < one_after_last)
-            if(j == one_after_last || (i < middle && data[i] <= data[j]))
-                buffer[k++] = data[i++];
-            else
-                buffer[k++] = data[j++];
-        for(i = first;i < one_after_last;i++)
-            data[i] = buffer[i];
-        free(buffer + first);
-    }
-}
  
 void swap(integer_t *a, integer_t *b) {
     integer_t temp = *a;
     *a = *b;
     *b = temp;
-  }
+}
   
-  void heapify(integer_t arr[], int n, int i) {
+void heapify(integer_t arr[], int n, int i) {
     // Find largest among root, left child and right child
     int largest = i;
     int left = 2 * i + 1;
@@ -157,10 +116,10 @@ void swap(integer_t *a, integer_t *b) {
       swap(&arr[i], &arr[largest]);
       heapify(arr, n, largest);
     }
-  }
+}
   
-  // Main function to do heap sort
-  void heapSort(integer_t arr[], int n) {
+// Main function to do heap sort
+void heapSort(integer_t arr[], int n) {
     // Build max heap
     for (int i = n / 2 - 1; i >= 0; i--)
       heapify(arr, n, i);
@@ -172,7 +131,7 @@ void swap(integer_t *a, integer_t *b) {
       // Heapify root element to get highest element at root again
       heapify(arr, i, 0);
     }
-  }
+}
 
 int mitm(int n, integer_t *p, integer_t desired_sum){
  
@@ -234,14 +193,14 @@ int main(void){
     //FILE *fp_1 = NULL;
     //FILE *fp_2 = NULL;
     //FILE *fp_3 = NULL;
-    //FILE *fp_4 = NULL;
+    FILE *fp_4 = NULL;
 	
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
     //fp_1 = fopen("data_1.log", "a");
     //fp_2 = fopen("data_2.log", "a");
     //fp_3 = fopen("data_3.log", "a");
-    //fp_4 = fopen("data_4.log", "a");
+    fp_4 = fopen("data_4.log", "a");
     //integer_t pi[5] = {1,3,5,7,8};
     //printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
     
@@ -256,7 +215,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < n_problems;i++)
+    for(int i = 0;i < n_problems-7;i++)
     {
         printf("--------------------------- \n");
                 
@@ -323,7 +282,7 @@ int main(void){
         //fprintf(fp_1,"%i %f \n",n, dt_bf_i);
         //fprintf(fp_2,"%i %f \n",n, dt_bf_r);
         //fprintf(fp_3,"%i %f \n",n, dt_bf_i_s);
-        //fprintf(fp_4,"%i %f \n",n, dt_mitm);
+        fprintf(fp_4,"%i %f \n",n, dt_mitm);
 
     }   
     

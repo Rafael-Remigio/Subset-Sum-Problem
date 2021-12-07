@@ -76,81 +76,47 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
 
  
 
-void merge(integer_t arr[], integer_t a[], integer_t l, integer_t m, integer_t r)
-{
-    integer_t i, j, k;
-    integer_t n1 = m - l + 1;
-    integer_t n2 = r - m;
+void swap(integer_t *a, integer_t *b) {
+    integer_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
   
-    /* create temp arrays */
-    integer_t L[n1], R[n2];
-    integer_t L_2[n1], R_2[n2];
+void heapify(integer_t arr[],integer_t a[], int n, int i) {
+    // Find largest among root, left child and right child
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
   
-    /* Copy data to temp arrays L[] and R[] */
-    for (i = 0; i < n1; i++){
-        L[i] = arr[l + i];
-        L_2[i] = a[l + i];}
-    for (j = 0; j < n2; j++){
-        R[j] = arr[m + 1 + j];
-        R_2[j] = a[m + 1 + j];}
+    if (left < n && arr[left] > arr[largest])
+      largest = left;
   
-    /* Merge the temp arrays back into arr[l..r]*/
-    i = 0; // Initial index of first subarray
-    j = 0; // Initial index of second subarray
-    k = l; // Initial index of merged subarray
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            a[k] =  L_2[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            a[k] = R_2[j];
-            j++;
-        }
-        k++;
-    }
+    if (right < n && arr[right] > arr[largest])
+      largest = right;
   
-    /* Copy the remaining elements of L[], if there
-    are any */
-    while (i < n1) {
-        arr[k] = L[i];
-        a[k] = L_2[i];
-        i++;
-        k++;
-    }
-  
-    /* Copy the remaining elements of R[], if there
-    are any */
-    while (j < n2) {
-        arr[k] = R[j];
-        a[k] = R_2[j];
-        j++;
-        k++;
+    // Swap and continue heapifying if root is not largest
+    if (largest != i) {
+      swap(&arr[i], &arr[largest]);
+      swap(&a[i], &a[largest]);
+      heapify(arr, a, n, largest);
     }
 }
   
- 
-void mergeSort(integer_t arr[],integer_t a[], integer_t l, integer_t r)
-{
-    if (l < r) {
-        // Same as (l+r)/2, but avoids overflow for
-        // large l and h
-        integer_t m = l + (r - l) / 2;
+// Main function to do heap sort
+void heapSort(integer_t arr[],integer_t a[], int n) {
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+      heapify(arr, a, n, i);
   
-        // Sort first and second halves
-        mergeSort(arr,a, l, m);
-        mergeSort(arr,a, m + 1, r);
+    // Heap sort
+    for (int i = n - 1; i >= 0; i--) {
+      swap(&arr[0], &arr[i]);
+      swap(&a[0], &a[i]);
   
-        merge(arr,a, l, m, r);
+      // Heapify root element to get highest element at root again
+      heapify(arr, a, i, 0);
     }
 }
-
-
-
-
-
 
 
 
@@ -181,28 +147,7 @@ void calcsubarray(integer_t a[], integer_t x[], integer_t b[], int n, int c)
 
     }
 } 
-
-
-// insertion sort q roubei so prar 
-void Sort(integer_t arr[],integer_t a[], integer_t n)
-{
-    integer_t i, key, key_2, j;
-    for (i = 1; i < n; i++) {
-        key = arr[i];
-        key_2 = a[i];
-        j = i - 1;
-  
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            a[j + 1] = a[j];
-            j = j - 1;
-        }
-        arr[j + 1] = key;
-        a[j + 1] = key_2;
-    }
-}
-
-
+ 
 
 int mitm(int n, integer_t *p, integer_t desired_sum){
  
@@ -238,8 +183,8 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
 
  
     // Sorta os arrays  
-    mergeSort(X,a, 0, size_X-1);
-    mergeSort(Y,b, 0, size_Y-1);
+    heapSort(X, a, size_X);
+    heapSort(Y, b, size_Y);
 
     /*
     printf("\n");
@@ -280,7 +225,7 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
 
 
 
-char *Converter(int n,int x, char *sol){
+char *Converter(int n,integer_t x, char *sol){
     for(int bit=0; bit<n ;bit++){
         int mask = (1<<bit);   
         if((x & mask)!=0){ sol[bit]='1';}else{ sol[bit]='0';}
@@ -354,7 +299,7 @@ int main(void)
             dt_bf_r += tmp_dt;
 
             tmp_dt = cpu_time();   
-            //int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
+            int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i_s += tmp_dt;
 
@@ -368,8 +313,7 @@ int main(void)
             printf("-------------------------------------------------\n");
             //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
             //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            //printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
-            //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
+            printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
             printf("Meet in the middle      %d,  %lld || %i -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
             
         }
