@@ -658,7 +658,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)23349643ull,
       (integer_t)23443724ull
     },
-    {
+    {                            
       (integer_t)68013949ull, // 100001000001010000100001
       (integer_t)164607904ull, // 010101111110010011110011
       (integer_t)100487532ull, // 111110010101110000011000
@@ -985,7 +985,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)2951756637ull,
       (integer_t)3069060397ull
     },
-    {
+    {                                
       (integer_t)31180402230ull, // 100011111001111110110100110001
       (integer_t)25600626739ull, // 110000001011101110010000110110
       (integer_t)37345180259ull, // 101101110101111101111110011001
@@ -1063,7 +1063,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)20300088299ull, // 0101111011010001010010000110111
       (integer_t)10015271725ull, // 1011100000111110000101000100000
       (integer_t)21515141112ull, // 0110001101010111101111110011000
-      (integer_t)14838419613ull // 1100001110101000001101001011000
+      (integer_t)14838419613ull // 1100001110101000001101001011000              
     }
   },
   {
@@ -1162,7 +1162,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)25518989443ull,
       (integer_t)25715443603ull
     },
-    {
+    {                                      
       (integer_t)208507928925ull, // 110101100001110000000010010111101
       (integer_t)211175122605ull, // 010101101000000110110100010110011
       (integer_t)206609283467ull, // 111101000101111100010000110011001
@@ -1222,8 +1222,8 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)32806764230ull,
       (integer_t)34023533741ull,
       (integer_t)34305829453ull
-    },
-    {
+    },                               
+    {                                
       (integer_t)211032042114ull, // 1111001100100011011111000110000110
       (integer_t)197094600649ull, // 0000100011001000011011000010011010
       (integer_t)153410864753ull, // 0110001100000101100111100000110000
@@ -1242,7 +1242,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)155933198730ull, // 0000111111101001010110100100000100
       (integer_t)263977362344ull, // 1000101000000101110001111011010110
       (integer_t)231251614460ull, // 0101001101111011110101110001001010
-      (integer_t)243921479000ull, // 1100001001001100001011110110011010
+      (integer_t)243921479000ull, // 1100001001001100001011110110011010 
       (integer_t)224439955998ull // 0011101001000100100110111101000110
     }
   },
@@ -1285,7 +1285,7 @@ subset_sum_problem_data_t all_subset_sum_problems[n_problems + 1] = // the list 
       (integer_t)74788816918ull,
       (integer_t)76986464930ull
     },
-    {
+    {                                 
       (integer_t)865969172410ull, // 01100101000000011111101110101100111
       (integer_t)814616998970ull, // 10000010010011110100001100101101111
       (integer_t)641278115661ull, // 01000101000101101100010110000111100

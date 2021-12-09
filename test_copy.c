@@ -66,8 +66,8 @@ integer_t Bf_recur_smart( unsigned int n,int m,integer_t *p,integer_t sum, integ
         
         return 0 ;
     }
-
-    integer_t stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,m),desired_sum);  
+    integer_t power = (1ull);
+    integer_t stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + (power<<m),desired_sum);  
     if (stuff == 0)  {                 
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
@@ -227,7 +227,7 @@ integer_t mitm(int n, integer_t *p, integer_t desired_sum){
 
 char *Converter(int n,integer_t x, char *sol){
     for(int bit=0; bit<n ;bit++){
-        int mask = (1<<bit);   
+        integer_t mask = (1ull<<bit);   
         if((x & mask)!=0){ sol[bit]='1';}else{ sol[bit]='0';}
     }
     sol[n]='\0';
@@ -262,7 +262,7 @@ int main(void)
      
 
    // start looping for n's
-    for(int i = 0;i < n_problems;i++)
+    for(int i = 20;i < n_problems;i++)
     {
         printf("--------------------------- \n");
                 
@@ -312,8 +312,8 @@ int main(void)
             printf("-------------------------------------------------\n");
             //printf("Brute force             %d,  %lld || %lld -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
             //printf("Brute force recursiva   %d,  %lld || %lld -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
-            printf("Meet in the middle      %d,  %lld || %lld -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
+            printf("Brute force recur smart %d,  %lld || %llu -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
+            printf("Meet in the middle      %d,  %lld || %llu -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
             
         }
 
