@@ -163,37 +163,16 @@ integer_t mitm(int n, integer_t *p, integer_t desired_sum){
     integer_t *a = malloc(size_X*sizeof(integer_t));
     integer_t *b = malloc(size_Y*sizeof(integer_t));
 
-    
-     
-
-    /*
-    
-        integer_t a[n/2];
-        memcpy(a, p, (n/2) * sizeof(integer_t));
-        integer_t b[(n+1)/2];
-        memcpy(b, &p[(n/2)], ((n+1)/2) * sizeof(integer_t));
-    */
-
- 
-    // enche os arrays com as somas respetivas
+    // Calcula arrays
     calcsubarray(p, X, a, n/2, 0);
     calcsubarray(p, Y, b,  n-n/2, n/2);
-
-   
 
  
     // Sorta os arrays  
     heapSort(X, a, size_X);
     heapSort(Y, b, size_Y);
 
-    /*
-    printf("\n");
-    for(int i=0; i<size_X;i++){
-        printf("%lld, ", X[i]);
-        printf("%lld, ", a[i]);
-    }
-    printf("\n");
-    */
+    
 
     // loopa comparando e tal (como o stor explicou)
     for(integer_t i=0; i< size_X;){
@@ -298,7 +277,7 @@ int main(void)
             dt_bf_r += tmp_dt;
 
             tmp_dt = cpu_time();   
-            integer_t comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
+            //integer_t comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i_s += tmp_dt;
 
@@ -312,7 +291,7 @@ int main(void)
             printf("-------------------------------------------------\n");
             //printf("Brute force             %d,  %lld || %lld -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
             //printf("Brute force recursiva   %d,  %lld || %lld -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            printf("Brute force recur smart %d,  %lld || %llu -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
+            //printf("Brute force recur smart %d,  %lld || %llu -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin)); 
             printf("Meet in the middle      %d,  %lld || %llu -> %s \n", j ,sum, x, Converter(n, x, comb_bin));
             
         }

@@ -90,7 +90,25 @@ void calcsubarray(integer_t a[], integer_t x[], int n, int c){
         }
     }
 } 
-  
+
+void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
+
+    integer_t s;
+    for (int i=0; i<(1<<n); i++)
+    {
+        s = 0;
+        for (int j=0; j<n; j++){
+            if (i & (1<<j)){
+                s += a[j+c];
+            }    
+        }
+        if(s >= 0){
+          x[i] = s;  
+        }
+    }
+} 
+
+
 
  
 void swap(integer_t *a, integer_t *b) {
@@ -173,7 +191,41 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     return 0;
 }
 
+int faster_mitm(int n, integer_t *p, integer_t desired_sum){
+ 
+    // pega o tamanho
+    int size_X = 1<<(n/2);
+    int size_Y = 1<<(n-n/2);
+    
+    // arranja espaço para as somas
+    integer_t *X = malloc(size_X*sizeof(integer_t));
+    integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
 
+    // enche os arrays com as somas respetivas
+    faster_calcsubarray(p, X, n/2, 0);
+    faster_calcsubarray(p, Y, n-n/2, n/2); 
+     
+    // loopa comparando e tal (como o stor explicou)
+
+    int i= 0;
+    int j= size_Y - 1;
+    while(i< size_X && j >= 0){
+        integer_t s = X[i]+Y[j]; 
+        if(s == desired_sum ){ 
+            free(X);
+            free(Y);
+            return 1;   
+        }else if(s < desired_sum){
+            i++;
+        }else{
+            j--;
+        } 
+        
+        
+    }
+
+    return 0;
+}
 
 char *Converter(int n,int x, char *sol){
     for(int bit=0; bit<n ;bit++){
@@ -194,6 +246,7 @@ int main(void){
     //FILE *fp_2 = NULL;
     //FILE *fp_3 = NULL;
     FILE *fp_4 = NULL;
+    FILE *fp_5 = NULL;
 	
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
@@ -201,6 +254,7 @@ int main(void){
     //fp_2 = fopen("data_2.log", "a");
     //fp_3 = fopen("data_3.log", "a");
     fp_4 = fopen("data_4.log", "a");
+    fp_5 = fopen("data_4_max.log", "a");
     //integer_t pi[5] = {1,3,5,7,8};
     //printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
     
@@ -234,7 +288,7 @@ int main(void){
         double dt_bf_r = 0;
         double dt_bf_i_s = 0;*/
         double dt_mitm = 0;     
-        
+        double last_max = 0;
 
         // loop for sums
         for(int j = 0;j < n_sums;j++)
@@ -266,7 +320,14 @@ int main(void){
             int x= mitm(n, p, sum);
             
             tmp_dt = cpu_time() - tmp_dt;
+
+            if(tmp_dt > last_max){
+                last_max = tmp_dt;
+            }
+
             dt_mitm += tmp_dt;
+
+            //int y= faster_mitm(n, p, sum);
  
             // print results
             printf("-------------------------------------------------\n");
@@ -275,6 +336,7 @@ int main(void){
             //printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
             //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
             printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
+           // printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
             
         }
 
@@ -282,7 +344,8 @@ int main(void){
         //fprintf(fp_1,"%i %f \n",n, dt_bf_i);
         //fprintf(fp_2,"%i %f \n",n, dt_bf_r);
         //fprintf(fp_3,"%i %f \n",n, dt_bf_i_s);
-        fprintf(fp_4,"%i %f \n",n, dt_mitm);
+        //fprintf(fp_4,"%i %f \n",n, dt_mitm/20);
+        //fprintf(fp_5,"%i %f \n",n, last_max);
 
     }   
     
