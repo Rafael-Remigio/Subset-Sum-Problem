@@ -50,7 +50,8 @@ int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,in
     return stuff;
 }
 
-int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_t desired_sum){ 
+integer_t Bf_recur_smart( unsigned int n,int m,integer_t *p,integer_t sum, integer_t comb,integer_t desired_sum)
+{  
 
     if (sum == desired_sum){
         return comb;
@@ -60,12 +61,11 @@ int Bf_recur_smart( unsigned int n,int m,integer_t *p,int sum, int comb,integer_
     }
     if(m == -1)
     { 
+        
         return 0 ;
     }
-
-    
-    int stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + pow(2,m),desired_sum);  
-    
+    integer_t power = (1ull);
+    integer_t stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + (power<<m),desired_sum);  
     if (stuff == 0)  {                 
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
@@ -242,21 +242,30 @@ int main(void){
 
  
     /* Setting up file */
-    //FILE *fp_1 = NULL;
-    //FILE *fp_2 = NULL;
-    //FILE *fp_3 = NULL;
+    FILE *fp_1 = NULL;
+    FILE *fp_2 = NULL;
+    FILE *fp_3 = NULL;
     FILE *fp_4 = NULL;
     FILE *fp_5 = NULL;
+    FILE *fp_6 = NULL;
+    FILE *fp_7 = NULL;
+    FILE *fp_8 = NULL;
 	
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
-    //fp_1 = fopen("data_1.log", "a");
-    //fp_2 = fopen("data_2.log", "a");
-    //fp_3 = fopen("data_3.log", "a");
-    fp_4 = fopen("data_4.log", "a");
-    fp_5 = fopen("data_4_max.log", "a");
-    //integer_t pi[5] = {1,3,5,7,8};
-    //printf("\n\nResposta = %d",Bf_recur_smart(5,4,pi ,0,0,9));
+    fp_1 = fopen("data_1.log", "a");
+    fp_2 = fopen("data_1_max.log", "a");
+
+    fp_3 = fopen("data_2.log", "a");
+    fp_4 = fopen("data_2_max.log", "a");
+
+    fp_5 = fopen("data_3.log", "a");
+    fp_6 = fopen("data_3_max.log", "a");
+
+    fp_7 = fopen("data_4.log", "a");
+    fp_8 = fopen("data_4_max.log", "a");
+    
+ 
     
     printf("\n");
     printf("Program configuration:\n");
@@ -269,7 +278,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < n_problems-7;i++)
+    for(int i = 0;i < 19;i++)
     {
         printf("--------------------------- \n");
                 
@@ -280,15 +289,17 @@ int main(void){
         // get p and sums
         integer_t *p = all_subset_sum_problems[i].p;     
 
-        //create space to store results
-            //char comb_bin[n+1];
+        char comb_bin[n+1];
 
-        /*
+        
         double dt_bf_i = 0;  
+        double dt_bf_i_max = 0;  
         double dt_bf_r = 0;
-        double dt_bf_i_s = 0;*/
+        double dt_bf_r_max = 0;
+        double dt_bf_i_s = 0;
+        double dt_bf_i_s_max = 0;
         double dt_mitm = 0;     
-        double last_max = 0;
+        double dt_mitm_max = 0;
 
         // loop for sums
         for(int j = 0;j < n_sums;j++)
@@ -296,56 +307,69 @@ int main(void){
             integer_t sum = all_subset_sum_problems[i].sums[j];
             double tmp_dt;
 
-            /*
-            // run function and take time 
+            
+            // Iterative
             tmp_dt = cpu_time();   
-            //int comb = Bf_Iter(n, p, sum);
+            int comb = Bf_Iter(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
+            
+            if(tmp_dt > dt_bf_i_max){
+                dt_bf_i_max = tmp_dt;
+            }
             dt_bf_i += tmp_dt;
 
+            // Recursive
             tmp_dt = cpu_time();   
-            //int comb_rec= Bf_recur(n,0, p,0,0,sum);
+            int comb_rec= Bf_recur(n,0, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
+            
+            if(tmp_dt > dt_bf_r_max){
+                dt_bf_r_max = tmp_dt;
+            }
             dt_bf_r += tmp_dt;
 
+            // Recursive Smart
             tmp_dt = cpu_time();   
-            //int comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
+            integer_t comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
             tmp_dt = cpu_time() - tmp_dt;
+
+            if(tmp_dt > dt_bf_i_s_max){
+                dt_bf_i_s_max = tmp_dt;
+            }
             dt_bf_i_s += tmp_dt;
 
-            */
-
+            // Meet in the middle
             tmp_dt = cpu_time();   
-           
             int x= mitm(n, p, sum);
-            
             tmp_dt = cpu_time() - tmp_dt;
 
-            if(tmp_dt > last_max){
-                last_max = tmp_dt;
+            if(tmp_dt > dt_mitm_max){
+                dt_mitm_max = tmp_dt;
             }
-
             dt_mitm += tmp_dt;
 
             //int y= faster_mitm(n, p, sum);
  
             // print results
             printf("-------------------------------------------------\n");
-            //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
-            //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            //printf("Brute force recur smart %d,  %lld || %i -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
-            //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
+            printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+            printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+            printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
+            printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
             printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
            // printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
             
         }
 
         // store times 
-        //fprintf(fp_1,"%i %f \n",n, dt_bf_i);
-        //fprintf(fp_2,"%i %f \n",n, dt_bf_r);
-        //fprintf(fp_3,"%i %f \n",n, dt_bf_i_s);
-        //fprintf(fp_4,"%i %f \n",n, dt_mitm/20);
-        //fprintf(fp_5,"%i %f \n",n, last_max);
+        fprintf(fp_1,"%i %f \n",n, dt_bf_i/20);
+        fprintf(fp_2,"%i %f \n",n, dt_bf_i_max);
+        fprintf(fp_3,"%i %f \n",n, dt_bf_r/20);
+        fprintf(fp_4,"%i %f \n",n, dt_bf_r_max);
+        fprintf(fp_5,"%i %f \n",n, dt_bf_i_s/20);
+        fprintf(fp_6,"%i %f \n",n, dt_bf_i_s_max);
+        fprintf(fp_7,"%i %f \n",n, dt_mitm/20);
+        fprintf(fp_8,"%i %f \n",n, dt_mitm_max);
 
     }   
     
