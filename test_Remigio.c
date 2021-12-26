@@ -164,6 +164,27 @@ void heapSort(integer_t arr[], int n) {
     }
 }
 
+void bubbleSort(integer_t arr[], int n)
+{
+   int i, j;
+   int swapped;
+   for (i = 0; i < n-1; i++)
+   {
+     swapped = 0;
+     for (j = 0; j < n-i-1; j++)
+     {
+        if (arr[j] > arr[j+1]) 
+        {
+           swap(&arr[j], &arr[j+1]);
+           swapped = 1;
+        }
+     }
+ 
+     if (swapped == 0)
+        break;
+   }
+}
+
 
 
 int mitm(int n, integer_t *p, integer_t desired_sum){
@@ -181,8 +202,8 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     calcsubarray(p, Y, n-n/2, n/2);
      
     // Sorta os arrays 
-    heapSort(X, size_X);
-    heapSort(Y, size_Y);
+    bubbleSort(X, size_X);
+    bubbleSort(Y, size_Y);
      
     // loopa comparando e tal (como o stor explicou)
 

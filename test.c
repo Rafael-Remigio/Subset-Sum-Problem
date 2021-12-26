@@ -15,15 +15,15 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
     int comb = 0;
     integer_t test_sum;
 
-    for(comb;comb<(1<<n);comb++){
+    for(comb;comb<(1<<n);comb++){   // changes the combination
         test_sum =0;
 
         for(int bit=0; bit<n ;bit++){
             int mask = (1<<bit);
-            if((comb & mask)!=0){test_sum += p[bit];}
+            if((comb & mask)!=0){test_sum += p[bit];}   
         }   
 
-        if(test_sum == desired_sum){break;}
+        if(test_sum == desired_sum){break;} // tests if the sum is equal to the desired sum 
     }
 
     return comb;
@@ -32,44 +32,44 @@ int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
  
 int Bf_recur( unsigned int n,unsigned int m,integer_t *p,double sum, int comb,integer_t desired_sum){
     
-    if(m == n)
+    if(m == n) // if is in last step of recursion
     {
         if (sum == desired_sum){
-            return comb;
+            return comb;    // return combination different from 0 if found
             
         }
-        else return 0;
+        else return 0;      // else returns 0
     }
 
     
-    int stuff = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
-    if (stuff == 0)  {                 
+    int result = Bf_recur(n,m + 1u,p,sum , comb ,desired_sum);  
+    if (result == 0)  {         // if combination is 0 it means we must take another path          
  
         return Bf_recur(n,m + 1u,p,sum + p[m] ,comb+ pow(2,m),desired_sum);      
     }   
-    return stuff;
+    return result;
 }
 
 integer_t Bf_recur_smart( unsigned int n,int m,integer_t *p,integer_t sum, integer_t comb,integer_t desired_sum)
-{  
+{  // this function run trougth the array from bigger to smaller and if the current_sum is bigger then the desired_sum we exit, saving lots of time
 
-    if (sum == desired_sum){
+    if (sum == desired_sum){    // found the solucion so we return the combination
         return comb;
     }
-    if(sum > desired_sum){
+    if(sum > desired_sum){ // if current sum > desired_sum this branch does not contain the solucion
         return 0;
     }
-    if(m == -1)
-    { 
+    if(m == -1) 
+    {               // if we reached the end of the array
         
         return 0 ;
     }
     integer_t power = (1ull);
-    integer_t stuff = Bf_recur_smart(n,m-1,p,sum + p[m], comb + (power<<m),desired_sum);  
-    if (stuff == 0)  {                 
+    integer_t result = Bf_recur_smart(n,m-1,p,sum + p[m], comb + (power<<m),desired_sum);  
+    if (result == 0)  {             // if combination is 0 it means we must take another path         
         return Bf_recur_smart(n,m-1,p,sum  ,comb,desired_sum);      
     }   
-    return stuff;
+    return result;
 }
 
   
@@ -162,6 +162,28 @@ void heapSort(integer_t arr[], int n) {
       // Heapify root element to get highest element at root again
       heapify(arr, i, 0);
     }
+}
+void bubbleSort(integer_t arr[], int n)
+{
+    // used just for the graphs and to show how effective heapSort is
+
+   int i, j;
+   int swapped;
+   for (i = 0; i < n-1; i++)
+   {
+     swapped = 0;
+     for (j = 0; j < n-i-1; j++)
+     {
+        if (arr[j] > arr[j+1]) 
+        {
+           swap(&arr[j], &arr[j+1]);
+           swapped = 1;
+        }
+     }
+ 
+     if (swapped == 0)
+        break;
+   }
 }
 
 
