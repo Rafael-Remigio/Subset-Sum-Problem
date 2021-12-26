@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "elapsed_time.h"
-#include "000000.h"
+#include "102435.h"
 #include <string.h>
 #include <math.h>
 #define min_n       10
@@ -310,7 +310,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < n_problems;i++)
+    for(int i = 0;i < n_problems-8;i++)
     {
         printf("--------------------------- \n");
                 
@@ -371,7 +371,7 @@ int main(void){
                 dt_bf_i_s_max = tmp_dt;
             }
             dt_bf_i_s += tmp_dt;
-            
+            */
             
             // Meet in the middle
             tmp_dt = cpu_time();   
@@ -382,7 +382,7 @@ int main(void){
                 dt_mitm_max = tmp_dt;
             }
             dt_mitm += tmp_dt;
-            */
+            /*
 
             tmp_dt = cpu_time();   
             int y= faster_mitm(n, p, sum);
@@ -391,7 +391,7 @@ int main(void){
             if(tmp_dt > dt_f_mitm_max){
                 dt_f_mitm_max = tmp_dt;
             }
-            dt_f_mitm += tmp_dt;
+            dt_f_mitm += tmp_dt;*/
  
             // print results
             //printf("-------------------------------------------------\n");
@@ -399,8 +399,8 @@ int main(void){
             //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
             //printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
             //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
-            //printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
-            printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
+            printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
+            //printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
             
         }
 
@@ -411,11 +411,11 @@ int main(void){
         fprintf(fp_3,"%i %f \n",n, dt_bf_r/20);
         fprintf(fp_4,"%i %f \n",n, dt_bf_r_max);
         fprintf(fp_5,"%i %f \n",n, dt_bf_i_s/20);
-        fprintf(fp_6,"%i %f \n",n, dt_bf_i_s_max);
+        fprintf(fp_6,"%i %f \n",n, dt_bf_i_s_max);*/
         fprintf(fp_7,"%i %f \n",n, dt_mitm/20);
-        fprintf(fp_8,"%i %f \n",n, dt_mitm_max);*/
+        fprintf(fp_8,"%i %f \n",n, dt_mitm_max);/*
         fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
-        fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);
+        fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);*/
 
     }   
     
