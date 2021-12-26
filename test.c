@@ -180,7 +180,7 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     calcsubarray(p, X, n/2, 0);
     calcsubarray(p, Y, n-n/2, n/2);
      
-    // Sorta os arrays (Acho que isto pode ser o problema)
+    // Sorta os arrays 
     heapSort(X, size_X);
     heapSort(Y, size_Y);
      
@@ -216,28 +216,33 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
     integer_t *X = malloc(size_X*sizeof(integer_t));
     integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
 
+ 
+
+        printf("\n");
+        printf("\n");
+        for(int i=0;i<size_X;i++){
+            printf("%lld,", X[i]);
+        } 
+        printf("\n------------\n");
+        for(int i=0;i<size_Y;i++){
+            printf("%lld,", Y[i]);
+        }
+        printf("\n");
+        printf("\n");
+        
     // enche os arrays com as somas respetivas
     faster_calcsubarray(p, X, n/2, 0);
     faster_calcsubarray(p, Y, n-n/2, n/2); 
      
-    printf("\n");
-    printf("\n");
-    for(int i=0;i<size_X;i++){
-        printf("%lld,", X[i]);
-    } 
-    printf("\n------------\n");
-    for(int i=0;i<size_Y;i++){
-        printf("%lld,", Y[i]);
-    }
-    printf("\n");
-    printf("\n");
+   
 
     // loopa comparando e tal (como o stor explicou)
 
     int i= 0;
     int j= size_Y - 1;
     while(i< size_X && j >= 0){
-        integer_t s = X[i]+Y[j]; 
+        integer_t s = X[i]+Y[j];
+        
         if(s == desired_sum){ 
             
             free(X);
@@ -252,7 +257,7 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
         
         
     }
-
+   
     return 0;
 }
 
