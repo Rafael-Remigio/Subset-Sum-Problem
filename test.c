@@ -91,21 +91,34 @@ void calcsubarray(integer_t a[], integer_t x[], int n, int c){
     }
 } 
 
+
+ 
+
 void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
 
-    integer_t s;
-    for (int i=0; i<(1<<n); i++)
+     
+        
+    for (int i=0; i<n; i++)
     {
-        s = 0;
-        for (int j=0; j<n; j++){
-            if (i & (1<<j)){
-                s += a[j+c];
-            }    
+        integer_t i1 = (1<<n)-(1<<i);
+        integer_t j1 = i1;
+        integer_t k1 = (1<<n)-(2<<i);
+
+        while(i1 < (1<<n)){
+
+            if(x[i1] <= x[j1] + a[i+c]){
+                x[k1++] = x[i1++];
+            }else{
+                x[k1++] = x[j1++] + a[i+c];   
+            }
         }
-        if(s >= 0){
-          x[i] = s;  
+        while(j1 < (1<<n)){
+            x[j1++] += a[i+c];
         }
     }
+
+    
+    
 } 
 
 
@@ -150,6 +163,8 @@ void heapSort(integer_t arr[], int n) {
       heapify(arr, i, 0);
     }
 }
+
+
 
 int mitm(int n, integer_t *p, integer_t desired_sum){
  
@@ -205,15 +220,29 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
     faster_calcsubarray(p, X, n/2, 0);
     faster_calcsubarray(p, Y, n-n/2, n/2); 
      
+    printf("\n");
+    printf("\n");
+    for(int i=0;i<size_X;i++){
+        printf("%lld,", X[i]);
+    } 
+    printf("\n------------\n");
+    for(int i=0;i<size_Y;i++){
+        printf("%lld,", Y[i]);
+    }
+    printf("\n");
+    printf("\n");
+
     // loopa comparando e tal (como o stor explicou)
 
     int i= 0;
     int j= size_Y - 1;
     while(i< size_X && j >= 0){
         integer_t s = X[i]+Y[j]; 
-        if(s == desired_sum ){ 
+        if(s == desired_sum){ 
+            
             free(X);
             free(Y);
+            
             return 1;   
         }else if(s < desired_sum){
             i++;
@@ -278,7 +307,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < 19;i++)
+    for(int i = 0;i < 1;i++)
     {
         printf("--------------------------- \n");
                 
@@ -307,7 +336,7 @@ int main(void){
             integer_t sum = all_subset_sum_problems[i].sums[j];
             double tmp_dt;
 
-            
+            /*
             // Iterative
             tmp_dt = cpu_time();   
             int comb = Bf_Iter(n, p, sum);
@@ -337,6 +366,7 @@ int main(void){
                 dt_bf_i_s_max = tmp_dt;
             }
             dt_bf_i_s += tmp_dt;
+            
 
             // Meet in the middle
             tmp_dt = cpu_time();   
@@ -347,21 +377,24 @@ int main(void){
                 dt_mitm_max = tmp_dt;
             }
             dt_mitm += tmp_dt;
+            */
 
-            //int y= faster_mitm(n, p, sum);
+
+            int y= faster_mitm(n, p, sum);
  
             // print results
-            printf("-------------------------------------------------\n");
-            printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
-            printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-            printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
-            printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
-            printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
-           // printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
+            //printf("-------------------------------------------------\n");
+            //printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+            //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+            //printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
+            //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
+            //printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
+            printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
             
         }
 
         // store times 
+        /*
         fprintf(fp_1,"%i %f \n",n, dt_bf_i/20);
         fprintf(fp_2,"%i %f \n",n, dt_bf_i_max);
         fprintf(fp_3,"%i %f \n",n, dt_bf_r/20);
@@ -369,7 +402,7 @@ int main(void){
         fprintf(fp_5,"%i %f \n",n, dt_bf_i_s/20);
         fprintf(fp_6,"%i %f \n",n, dt_bf_i_s_max);
         fprintf(fp_7,"%i %f \n",n, dt_mitm/20);
-        fprintf(fp_8,"%i %f \n",n, dt_mitm_max);
+        fprintf(fp_8,"%i %f \n",n, dt_mitm_max);*/
 
     }   
     
