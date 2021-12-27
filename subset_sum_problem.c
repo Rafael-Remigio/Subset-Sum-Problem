@@ -235,25 +235,24 @@
     //Create Arrays needed to the mitm
       void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
 
-        
-            
         for (int i=0; i<n; i++)
         {
-            integer_t i1 = (1<<n)-(1<<i);
-            integer_t j1 = i1;
-            integer_t k1 = (1<<n)-(2<<i);
 
-            while(i1 < (1<<n)){
+          integer_t i1 = (1<<n)-(1<<i);
+          integer_t j1 = i1;
+          integer_t k1 = (1<<n)-(2<<i);
 
-                if(x[i1] <= x[j1] + a[i+c]){
-                    x[k1++] = x[i1++];
-                }else{
-                    x[k1++] = x[j1++] + a[i+c];   
-                }
+          while(i1 < (1<<n)){
+
+            if(x[i1] <= x[j1] + a[i+c]){
+              x[k1++] = x[i1++];
+            }else{
+              x[k1++] = x[j1++] + a[i+c];   
             }
-            while(j1 < (1<<n)){
-                x[j1++] += a[i+c];
-            }
+          }
+          while(j1 < (1<<n)){
+            x[j1++] += a[i+c];
+          }
         }
 
       } 
