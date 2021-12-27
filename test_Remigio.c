@@ -192,7 +192,7 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     // pega o tamanho
     int size_X = 1<<(n/2);
     int size_Y = 1<<(n-n/2);
-    
+    printf("size x = %i and size y = %i  ",size_X,size_Y);
     // arranja espaço para as somas
     integer_t *X = malloc(size_X*sizeof(integer_t));
     integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
@@ -274,6 +274,42 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
    
     return 0;
 }
+
+
+int SS(int n, integer_t *p, integer_t desired_sum){
+
+    // pega o tamanho
+
+
+
+    // arranja espaço para as somas
+            int size_X = 1<<(n/4);
+            int size_Y = 1<<(n-n/4);
+            integer_t *A;
+            integer_t *B;
+            integer_t *C;
+            integer_t *D;
+    switch (n % 4){
+        case 0:       
+            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i\n", size_X,size_X,size_X,size_X);
+            break;
+        case 1:
+ 
+            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i\n", size_X,size_X,size_X,size_Y);
+            break;
+        case 2:
+
+  
+            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i \n", size_X,size_Y,size_X,size_Y);
+            break;       
+        case 3:
+
+            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i \n", size_X,size_Y,size_Y,size_Y);
+            break;
+    }
+}
+
+
 
 char *Converter(int n,int x, char *sol){
     for(int bit=0; bit<n ;bit++){
@@ -395,7 +431,7 @@ int main(void){
             */
             
             // Meet in the middle
-            tmp_dt = cpu_time();   
+/*             tmp_dt = cpu_time();   
             int x= mitm(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
 
@@ -403,6 +439,8 @@ int main(void){
                 dt_mitm_max = tmp_dt;
             }
             dt_mitm += tmp_dt;
+ */
+            int y = SS(n, p, sum);
             /*
 
             tmp_dt = cpu_time();   
@@ -420,7 +458,7 @@ int main(void){
             //printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
             //printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));
             //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
-            printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
+/*             printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x); */
             //printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
             
         }
@@ -433,8 +471,8 @@ int main(void){
         fprintf(fp_4,"%i %f \n",n, dt_bf_r_max);
         fprintf(fp_5,"%i %f \n",n, dt_bf_i_s/20);
         fprintf(fp_6,"%i %f \n",n, dt_bf_i_s_max);*/
-        fprintf(fp_7,"%i %f \n",n, dt_mitm/20);
-        fprintf(fp_8,"%i %f \n",n, dt_mitm_max);/*
+/*         fprintf(fp_7,"%i %f \n",n, dt_mitm/20);
+        fprintf(fp_8,"%i %f \n",n, dt_mitm_max); *//*
         fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
         fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);*/
 
