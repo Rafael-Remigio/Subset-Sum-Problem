@@ -1,0 +1,77 @@
+void faster_calcsubarray(integer_t a[], integer_t x[], integer_t b[], int n, int c){
+
+    for (int i=0; i<n; i++){
+        
+
+        integer_t i1 = (1<<n)-(1<<i);
+        integer_t j1 = i1;
+        integer_t k1 = (1<<n)-(2<<i);
+
+        while(i1 < (1<<n)){
+
+            if(x[i1] <= x[j1] + a[i+c]){
+                x[k1++] = x[i1++];
+                b[k1++] = b[i1++];
+            }else{
+                x[k1++] = x[j1++] + a[i+c];  
+                b[k1++] = b[j1++] + pow(2, i+c); 
+            }
+        }
+
+        while(j1 < (1<<n)){
+            x[j1++] += a[i+c];
+            b[j1++] += pow(2, i+c); 
+        }
+    }
+
+} 
+    
+int faster_mitm(int n, integer_t *p, integer_t desired_sum){
+      
+        // Get sub-arrays sizes
+        int size_X = 1<<(n/2);
+        int size_Y = 1<<(n-n/2);
+          
+        // Allocate space for them
+        integer_t *X = malloc(size_X*sizeof(integer_t));
+        integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
+        integer_t *a = malloc(size_X*sizeof(integer_t));
+        integer_t *b = malloc(size_Y*sizeof(integer_t));
+
+        for(int i=0;i<size_X;i++){
+          X[i]=0; 
+        }  
+        for(int i=0;i<size_Y;i++){
+          Y[i]=0;
+        } 
+              
+        // Create the sub arrays and Sort them
+        faster_calcsubarray(p, X, a, n/2, 0);
+        faster_calcsubarray(p, Y, b, n-n/2, n/2); 
+          
+        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
+        int i= 0;
+        int j= size_Y - 1;
+        while(i< size_X && j >= 0){
+
+            integer_t s = X[i]+Y[j];
+              
+            if(s == desired_sum){ 
+                  
+                free(X);     
+                free(Y);                 
+                integer_t r = a[i] + b[j];
+                free(a);
+                free(b);
+                return r;
+            }else if(s < desired_sum){
+                i++;
+            }else{
+                j--;
+            }  
+        }
+
+    // return 0 if is not found
+    return 0;
+}
+    

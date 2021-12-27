@@ -20,10 +20,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "elapsed_time.h"
 #include STUDENT_H_FILE
 
 //Sorts
+
+  void swap(integer_t *a, integer_t *b) {
+    integer_t temp = *a;
+    *a = *b;
+    *b = temp;
+  }
 
   //Bubble Sort
     void bubbleSort(integer_t arr[], int n)
@@ -51,12 +58,6 @@
   //
 
   //Heap Sort
-    void swap(integer_t *a, integer_t *b) {
-        integer_t temp = *a;
-        *a = *b;
-        *b = temp;
-    }
-      
     void heapify(integer_t arr[], int n, int i) {
         // Find largest among root, left child and right child
         int largest = i;
@@ -304,7 +305,17 @@
 
 //
 
+//Converter (converts a decimal number to binary, used to get the commbinations)
+  char *Converter(int n,integer_t x, char *sol){
+    for(int bit=0; bit<n ;bit++){
+        integer_t mask = (1ull<<bit);   
+        if((x & mask)!=0){ sol[bit]='1';}else{ sol[bit]='0';}
+    }
+    sol[n]='\0';
 
+    return sol;
+  }
+//
 
 
 //
@@ -430,15 +441,16 @@ int main(void)
  
         // print results
         printf("-------------------------------------------------\n");
-        printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
-        printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-        printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
-        printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
-        printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
+        printf("Brute force                   %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+        printf("Brute force recursiva         %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+        printf("Brute force recur smart       %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
+        printf("Meet in the middle            %d,  %lld || %i  \n", j ,sum, x);
+        printf("Faster meet in the middle     %d,  %lld || %i  \n", j ,sum, y);
             
       }
 
-      // store times 
+      // store times (commented beacause we already took the data needed)
+      /*
       fprintf(fp_1,"%i %f \n",n, dt_bf_i/20);
       fprintf(fp_2,"%i %f \n",n, dt_bf_i_max);
       fprintf(fp_3,"%i %f \n",n, dt_bf_r/20);
@@ -449,6 +461,7 @@ int main(void)
       fprintf(fp_8,"%i %f \n",n, dt_mitm_max);
       fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
       fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);
+      */
 
     }     
 
