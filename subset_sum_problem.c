@@ -169,7 +169,7 @@
   //
   
   // Meet in the middle Algorithm
-    //Create Arrays needed to the mitm
+    //Create Array(x[]) composed by all the possible sums of a given Array(a[])
       void calcsubarray(integer_t a[], integer_t x[], int n, int c){
 
         integer_t s;
@@ -190,41 +190,41 @@
     //Algorithm
       int mitm(int n, integer_t *p, integer_t desired_sum){
     
-        // pega o tamanho
+        // Get sub-arrays sizes
         int size_X = 1<<(n/2);
         int size_Y = 1<<(n-n/2);
         
-        // arranja espaço para as somas
+        // Allocate space for them
         integer_t *X = malloc(size_X*sizeof(integer_t));
         integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
 
-        // enche os arrays com as somas respetivas
+        // Create the sub arrays
         calcsubarray(p, X, n/2, 0);
         calcsubarray(p, Y, n-n/2, n/2);
         
-        // Sorta os arrays 
+        // Sort them
         heapSort(X, size_X);
         heapSort(Y, size_Y);
         
-        // loopa comparando e tal (como o stor explicou)
-
+        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
         int i= 0;
         int j= size_Y - 1;
         while(i< size_X && j >= 0){
-            integer_t s = X[i]+Y[j]; 
-            if(s == desired_sum ){ 
-                free(X);
-                free(Y);
-                return 1;   
-            }else if(s < desired_sum){
-                i++;
-            }else{
-                j--;
-            } 
-            
-            
+
+          integer_t s = X[i]+Y[j]; 
+          if(s == desired_sum ){ 
+        
+            free(X);    //freeing the space of the arrays
+            free(Y);
+            return 1;   // return 1 if its found
+          }else if(s < desired_sum){
+            i++;
+          }else{
+            j--;
+          } 
         }
 
+        // return 0 if is not found
         return 0;
       }
     //
@@ -232,7 +232,7 @@
 
   // Faster Meet in the middle Algorithm (The difference being in the fact that this one sort the arrays while creating them)
 
-    //Create Arrays needed to the mitm
+    //Create a Sorted Array(x[]) composed by all the possible sums of a given Array(a[])
       void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
 
         for (int i=0; i<n; i++)
@@ -259,55 +259,52 @@
     //Algorithm
       int faster_mitm(int n, integer_t *p, integer_t desired_sum){
       
-          // pega o tamanho
-          int size_X = 1<<(n/2);
-          int size_Y = 1<<(n-n/2);
+        // Get sub-arrays sizes
+        int size_X = 1<<(n/2);
+        int size_Y = 1<<(n-n/2);
           
-          // arranja espaço para as somas
-          integer_t *X = malloc(size_X*sizeof(integer_t));
-          integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
+        // Allocate space for them
+        integer_t *X = malloc(size_X*sizeof(integer_t));
+        integer_t *Y = malloc(size_Y*sizeof(integer_t)); 
 
-          for(int i=0;i<size_X;i++){
-              X[i]=0;
+        for(int i=0;i<size_X;i++){
+          X[i]=0;
+        }  
+        for(int i=0;i<size_Y;i++){
+          Y[i]=0;
+        } 
+              
+        // Create the sub arrays and Sort them
+        faster_calcsubarray(p, X, n/2, 0);
+        faster_calcsubarray(p, Y, n-n/2, n/2); 
+          
+        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
+        int i= 0;
+        int j= size_Y - 1;
+        while(i< size_X && j >= 0){
+          integer_t s = X[i]+Y[j];
+              
+          if(s == desired_sum){ 
+                  
+            free(X);    //freeing the space of the arrays
+            free(Y);                 
+            return 1;   // return 1 if its found
+          }else if(s < desired_sum){
+            i++;
+          }else{
+            j--;
           }  
-          for(int i=0;i<size_Y;i++){
-              Y[i]=0;
-          } 
-              
-          // enche os arrays com as somas respetivas
-          faster_calcsubarray(p, X, n/2, 0);
-          faster_calcsubarray(p, Y, n-n/2, n/2); 
-          
-        
+        }
 
-          // loopa comparando e tal (como o stor explicou)
-
-          int i= 0;
-          int j= size_Y - 1;
-          while(i< size_X && j >= 0){
-              integer_t s = X[i]+Y[j];
-              
-              if(s == desired_sum){ 
-                  
-                  free(X);
-                  free(Y);
-                  
-                  return 1;   
-              }else if(s < desired_sum){
-                  i++;
-              }else{
-                  j--;
-              } 
-              
-              
-          }
-        
-          return 0;
+        // return 0 if is not found
+        return 0;
       }
     //
   //
 
 //
+
+
 
 
 //
@@ -322,12 +319,140 @@ int main(void)
   fprintf(stderr,"  n_sums ...... %d\n",n_sums);
   fprintf(stderr,"  n_problems .. %d\n",n_problems);
   fprintf(stderr,"  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
-  //
-  // place your code here
-
   
+ 
+  /* Setting up file */
+  FILE *fp_1 = NULL;
+  FILE *fp_2 = NULL;
+  FILE *fp_3 = NULL;
+  FILE *fp_4 = NULL;
+  FILE *fp_5 = NULL;
+  FILE *fp_6 = NULL;
+  FILE *fp_7 = NULL;
+  FILE *fp_8 = NULL;
+  FILE *fp_9 = NULL;
+  FILE *fp_10 = NULL;
+  fp_1 = fopen("data_1.log", "a");
+  fp_2 = fopen("data_1_max.log", "a");
+  fp_3 = fopen("data_2.log", "a");
+  fp_4 = fopen("data_2_max.log", "a");
+  fp_5 = fopen("data_3.log", "a");
+  fp_6 = fopen("data_3_max.log", "a");
+  fp_7 = fopen("data_4.log", "a");
+  fp_8 = fopen("data_4_max.log", "a");
+  fp_9 = fopen("data_5.log", "a");
+  fp_10 = fopen("data_5_max.log", "a");
+    
+ 
+
+  // Loop for n's
+  for(int i = 0;i < n_problems;i++){
+  
+    printf("--------------------------- \n");
+                
+    // get n and p
+    int n = all_subset_sum_problems[i].n;  
+    printf("n =  %i\n\n",n);
+    integer_t *p = all_subset_sum_problems[i].p;     
+
+    // Set up to get the combinations 
+    char comb_bin[n+1];
+
+    // Setting up time variables    
+    double dt_bf_i = 0;  
+    double dt_bf_i_max = 0;  
+    double dt_bf_r = 0;
+    double dt_bf_r_max = 0;
+    double dt_bf_i_s = 0;
+    double dt_bf_i_s_max = 0;
+    double dt_mitm = 0;     
+    double dt_mitm_max = 0;
+    double dt_f_mitm = 0;     
+    double dt_f_mitm_max = 0;
+
+    // Loop for sum's
+    for(int j = 0;j < n_sums;j++){
+           
+      integer_t sum = all_subset_sum_problems[i].sums[j];
+      double tmp_dt;
+
+        
+        // Iterative
+        tmp_dt = cpu_time();   
+        int comb = Bf_Iter(n, p, sum);
+        tmp_dt = cpu_time() - tmp_dt;
+        if(tmp_dt > dt_bf_i_max){
+          dt_bf_i_max = tmp_dt;
+        }
+        dt_bf_i += tmp_dt;
 
 
-  //
+        // Recursive
+        tmp_dt = cpu_time();   
+        int comb_rec= Bf_recur(n,0, p,0,0,sum);
+        tmp_dt = cpu_time() - tmp_dt;        
+        if(tmp_dt > dt_bf_r_max){
+          dt_bf_r_max = tmp_dt;
+        }
+        dt_bf_r += tmp_dt;
+
+
+        // Recursive Smart
+        tmp_dt = cpu_time();   
+        integer_t comb_smart= Bf_recur_smart(n,n-1, p,0,0,sum);
+        tmp_dt = cpu_time() - tmp_dt;
+        if(tmp_dt > dt_bf_i_s_max){
+          dt_bf_i_s_max = tmp_dt;
+        }
+        dt_bf_i_s += tmp_dt;
+            
+            
+        // Meet in the middle
+        tmp_dt = cpu_time();   
+        int x= mitm(n, p, sum);
+        tmp_dt = cpu_time() - tmp_dt;
+        if(tmp_dt > dt_mitm_max){
+          dt_mitm_max = tmp_dt;
+        }
+        dt_mitm += tmp_dt;
+
+            
+        // Fast Meet in the middle
+        tmp_dt = cpu_time();   
+        int y= faster_mitm(n, p, sum);
+        tmp_dt = cpu_time() - tmp_dt;
+        if(tmp_dt > dt_f_mitm_max){
+          dt_f_mitm_max = tmp_dt;
+        }
+        dt_f_mitm += tmp_dt;
+
+        
+ 
+        // print results
+        printf("-------------------------------------------------\n");
+        printf("Brute force             %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+        printf("Brute force recursiva   %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+        printf("Brute force recur smart %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
+        printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x);
+        printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
+            
+      }
+
+      // store times 
+      fprintf(fp_1,"%i %f \n",n, dt_bf_i/20);
+      fprintf(fp_2,"%i %f \n",n, dt_bf_i_max);
+      fprintf(fp_3,"%i %f \n",n, dt_bf_r/20);
+      fprintf(fp_4,"%i %f \n",n, dt_bf_r_max);
+      fprintf(fp_5,"%i %f \n",n, dt_bf_i_s/20);
+      fprintf(fp_6,"%i %f \n",n, dt_bf_i_s_max);
+      fprintf(fp_7,"%i %f \n",n, dt_mitm/20);
+      fprintf(fp_8,"%i %f \n",n, dt_mitm_max);
+      fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
+      fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);
+
+    }     
+
+
+   
   return 0;
 }
