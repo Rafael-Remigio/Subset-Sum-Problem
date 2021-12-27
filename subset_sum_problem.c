@@ -187,7 +187,7 @@
           }
         }
       } 
-    //Algorithm
+    //Algorithm itself
       int mitm(int n, integer_t *p, integer_t desired_sum){
     
         // Get sub-arrays sizes
@@ -256,7 +256,7 @@
         }
 
       } 
-    //Algorithm
+    //Algorithm itself
       int faster_mitm(int n, integer_t *p, integer_t desired_sum){
       
         // Get sub-arrays sizes
@@ -426,7 +426,7 @@ int main(void)
         }
         dt_f_mitm += tmp_dt;
 
-        
+
  
         // print results
         printf("-------------------------------------------------\n");
