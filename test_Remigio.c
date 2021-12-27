@@ -287,11 +287,11 @@ void min_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
     int r = 2 * i + 2; // down right = 2*i + 2
  
     // If left child is larger than root
-    if (l < n && A[arr[l][0]] + B[arr[l][1]]  < A[arr[smallest][0]] + B[arr[smallest][1]])
+    if (l < n && A[arr[l][0]] + B[arr[l][1]]  <= A[arr[smallest][0]] + B[arr[smallest][1]])
         smallest = l;
  
     // If right child is larger than largest so far
-    if (r < n && A[arr[r][0]] + B[arr[r][1]]  < A[arr[smallest][0]] + B[arr[smallest][1]])
+    if (r < n && A[arr[r][0]] + B[arr[r][1]]  <= A[arr[smallest][0]] + B[arr[smallest][1]])
         smallest = r;
  
     // If largest is not root
@@ -315,6 +315,9 @@ void generateMinHeap(int (*minheap)[2] , integer_t A[],integer_t B[],int size_a,
             }
         }
 
+        for (int i = 0;i< size_a*size_b;i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
+        }
         
         
         // Perform reverse level order traversal
@@ -366,6 +369,11 @@ int SS(int n, integer_t *p, integer_t desired_sum){
                         if (desired_sum==soma){
                             printf("\nsum is %llu \n",soma);
                             printf("\nindexes are : %i -- %i -- %i -- %i\n",i,j,h,g);
+                                    free(A);
+                                    free(B);
+                                    free(C);
+                                    free(D);
+                                    free(minheap);
                             return 1;
                         }
                     }   
