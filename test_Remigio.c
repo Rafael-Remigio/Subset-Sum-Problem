@@ -276,7 +276,7 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
 }
 
 
-void generateMinHeap(int minheap[][2] , integer_t A[],integer_t B[],int size_a,int size_b){
+void generateMinHeap(int **minheap , integer_t A[],integer_t B[],int size_a,int size_b){
   
         int heap_iter = 0;
         for(int i = 0; i < size_a; i++){
@@ -286,10 +286,6 @@ void generateMinHeap(int minheap[][2] , integer_t A[],integer_t B[],int size_a,i
                 heap_iter+=1;
             }
         }
-        for (int i = 0; i < heap_iter  ; i++){
-            printf("\nheap[%i] = [%i , %i] ; \n", i, minheap[i][0], minheap[i][1]);
-        }
-
 }
 
 int SS(int n, integer_t *p, integer_t desired_sum){
