@@ -121,7 +121,11 @@ void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
     
 } 
 
-
+void swap2(int *a[2], int *b[2]) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
  
 void swap(integer_t *a, integer_t *b) {
@@ -276,8 +280,32 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
 }
 
 
+void min_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
+{
+    int smallest = i; // Initialize largest as root
+    int l = 2 * i + 1; // down left = 2*i + 1
+    int r = 2 * i + 2; // down right = 2*i + 2
+ 
+    // If left child is larger than root
+    if (l < n && A[arr[l][0]] + B[arr[l][1]]  < A[arr[smallest][0]] + B[arr[smallest][1]])
+        smallest = l;
+ 
+    // If right child is larger than largest so far
+    if (r < n && A[arr[r][0]] + B[arr[r][1]]  < A[arr[smallest][0]] + B[arr[smallest][1]])
+        smallest = r;
+ 
+    // If largest is not root
+    if (smallest != i) {
+        swap2(&arr[i],&arr[smallest]);
+ 
+        // Recursively heapify the affected sub-tree
+        min_heapify(arr, n, A, B ,smallest);
+    }
+
+}
 void generateMinHeap(int (*minheap)[2] , integer_t A[],integer_t B[],int size_a,int size_b){
-  
+
+        // Generate tree from array indexes
         int heap_iter = 0;
         for(int i = 0; i < size_a; i++){
             for (int j = 0; j < size_b; j++){
@@ -285,6 +313,20 @@ void generateMinHeap(int (*minheap)[2] , integer_t A[],integer_t B[],int size_a,
                 minheap[heap_iter][1] = j;
                 heap_iter+=1;
             }
+        }
+
+        
+        
+        // Perform reverse level order traversal
+        // from last non-leaf node and heapify
+        int startIdx = ( (size_a*size_b) / 2) - 1;
+        printf("\n---%i--------------",startIdx);
+        // each node
+        for (int i = startIdx; i >= 0; i--) {
+            min_heapify(minheap, size_a*size_b , A, B ,i);
+        }
+        for (int i = 0;i< size_a*size_b;i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
         }
 }
 
