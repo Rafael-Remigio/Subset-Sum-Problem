@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "elapsed_time.h"
-#include "102435.h"
+#include "000000.h"
 #include <string.h>
 #include <math.h>
 #define min_n       10
@@ -202,8 +202,8 @@ int mitm(int n, integer_t *p, integer_t desired_sum){
     calcsubarray(p, Y, n-n/2, n/2);
      
     // Sorta os arrays 
-    bubbleSort(X, size_X);
-    bubbleSort(Y, size_Y);
+    heapSort(X, size_X);
+    heapSort(Y, size_Y);
      
     // loopa comparando e tal (como o stor explicou)
 
@@ -279,34 +279,46 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
 int SS(int n, integer_t *p, integer_t desired_sum){
 
     // pega o tamanho
-
-
-
+    int a = (n/2)/2;
+    int b = ((n/2) - (n/2)/2);
+    int c = (n - n/2)/2;
+    int d = ((n - n/2) - (n - n/2)/2);
+    printf("%i, %i ,%i ,%i /t %d, %d, %d, %d",a,b,c,d,(1<<a),(1<<b),(1<<c),(1<<d));
     // arranja espaço para as somas
-            int size_X = 1<<(n/4);
-            int size_Y = 1<<(n-n/4);
-            integer_t *A;
-            integer_t *B;
-            integer_t *C;
-            integer_t *D;
-    switch (n % 4){
-        case 0:       
-            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i\n", size_X,size_X,size_X,size_X);
-            break;
-        case 1:
- 
-            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i\n", size_X,size_X,size_X,size_Y);
-            break;
-        case 2:
+        integer_t *A = malloc(sizeof(integer_t)*(1<<a));
+        integer_t *B = malloc(sizeof(integer_t)*(1<<b));
+        integer_t *C = malloc(sizeof(integer_t)*(1<<c));
+        integer_t *D = malloc(sizeof(integer_t)*(1<<d));
 
-  
-            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i \n", size_X,size_Y,size_X,size_Y);
-            break;       
-        case 3:
+        calcsubarray(p, A, a, 0);
+        calcsubarray(p, B, b, a);
+        calcsubarray(p, C, c, b);
+        calcsubarray(p, D, d, c);
 
-            printf("\n ----------- \n size a = %i  size b = %i size c = %i  size d = %i \n", size_X,size_Y,size_Y,size_Y);
-            break;
-    }
+        heapSort(A,(1<<a));
+        heapSort(B,(1<<b));
+        heapSort(C,(1<<c));
+        heapSort(D,(1<<d));
+        for (int iter = 0; iter < (1<<a);iter++){
+            printf("\nA[%i] = %llu --- %i",iter, A[iter],(1<<a));
+        }
+
+        for(int i = 0;i < (1<<a);i++){
+            for(int j = 0;j < (1<<b);j++){
+                for(int h = 0;h < (1<<c);h++){
+                    for(int g = 0;g < (1<<d);g++){
+                        integer_t soma  = A[i] + B[j] + C[h]+D[g];
+                        if (desired_sum==soma){
+                            printf("\nsum is %llu \n",soma);
+                            printf("\nindexes are : %i -- %i -- %i -- %i\n",i,j,h,g);
+                            return 1;
+                        }
+                    }   
+                }
+            }
+        }
+        printf("\n not found \n");
+        return 0;
 }
 
 
@@ -367,7 +379,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < n_problems-8;i++)
+    for(int i = 0;i < 2;i++)
     {
         printf("--------------------------- \n");
                 
