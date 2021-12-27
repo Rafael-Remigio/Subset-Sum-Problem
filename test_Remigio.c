@@ -276,6 +276,22 @@ int faster_mitm(int n, integer_t *p, integer_t desired_sum){
 }
 
 
+void generateMinHeap(int minheap[][2] , integer_t A[],integer_t B[],int size_a,int size_b){
+  
+        int heap_iter = 0;
+        for(int i = 0; i < size_a; i++){
+            for (int j = 0; j < size_b; j++){
+                minheap[heap_iter][0] = i;
+                minheap[heap_iter][1] = j;
+                heap_iter+=1;
+            }
+        }
+        for (int i = 0; i < heap_iter  ; i++){
+            printf("\nheap[%i] = [%i , %i] ; \n", i, minheap[i][0], minheap[i][1]);
+        }
+
+}
+
 int SS(int n, integer_t *p, integer_t desired_sum){
 
     // pega o tamanho
@@ -283,7 +299,7 @@ int SS(int n, integer_t *p, integer_t desired_sum){
     int b = ((n/2) - (n/2)/2);
     int c = (n - n/2)/2;
     int d = ((n - n/2) - (n - n/2)/2);
-    printf("%i, %i ,%i ,%i /t %d, %d, %d, %d",a,b,c,d,(1<<a),(1<<b),(1<<c),(1<<d));
+
     // arranja espaço para as somas
         integer_t *A = malloc(sizeof(integer_t)*(1<<a));
         integer_t *B = malloc(sizeof(integer_t)*(1<<b));
@@ -292,16 +308,17 @@ int SS(int n, integer_t *p, integer_t desired_sum){
 
         calcsubarray(p, A, a, 0);
         calcsubarray(p, B, b, a);
-        calcsubarray(p, C, c, b);
-        calcsubarray(p, D, d, c);
+        calcsubarray(p, C, c, a + b);
+        calcsubarray(p, D, d, a + b + c);
 
         heapSort(A,(1<<a));
         heapSort(B,(1<<b));
         heapSort(C,(1<<c));
         heapSort(D,(1<<d));
-        for (int iter = 0; iter < (1<<a);iter++){
-            printf("\nA[%i] = %llu --- %i",iter, A[iter],(1<<a));
-        }
+
+        int minheap[(1<<a) + (1<<b)][2];
+
+        generateMinHeap(&minheap, A, B,(1<<a),(1<<b));
 
         for(int i = 0;i < (1<<a);i++){
             for(int j = 0;j < (1<<b);j++){
@@ -317,7 +334,13 @@ int SS(int n, integer_t *p, integer_t desired_sum){
                 }
             }
         }
+        
+        
         printf("\n not found \n");
+        free(A);
+        free(B);
+        free(C);
+        free(D);
         return 0;
 }
 
