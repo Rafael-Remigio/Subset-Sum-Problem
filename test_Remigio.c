@@ -453,8 +453,25 @@ int SS(int n, integer_t *p, integer_t desired_sum){
                 }
             }
         } */
-
-
+        integer_t soma;
+        for (int i = 0;i<((1<<c) * (1<<d));i++){
+            if (C[maxheap[i][0]] + D[maxheap[i][1]] > desired_sum){
+                continue;
+            }
+            for (int j = 0;j<((1<<a) * (1<<b));j++){
+               soma = A[minheap[j][0]] + B[minheap[j][1]] + C[maxheap[i][0]] + D[maxheap[i][1]];
+               if (soma == desired_sum){
+                           free(A);
+                            free(B);
+                            free(C);
+                            free(D);
+                            free(minheap);
+                            free(maxheap);
+                            printf("\n found it ");
+                            return 1;
+               }
+            }
+        }
         
         
         printf("\n not found \n");
@@ -525,7 +542,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < 2;i++)
+    for(int i = 0;i < 15;i++)
     {
         printf("--------------------------- \n");
                 
