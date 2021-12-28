@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "elapsed_time.h"
-#include "000000.h"
+#include "104360_extra.h"
 #include <string.h>
 #include <math.h>
 #define min_n       10
@@ -504,7 +504,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < n_problems;i++)
+    for(int i = 50;i < 51;i++)
     {
         printf("--------------------------- \n");
                 

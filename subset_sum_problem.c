@@ -10,7 +10,7 @@
 # error "This code must must be compiled in c99 mode or later (-std=c99)" // to handle the unsigned long long data type
 #endif
 #ifndef STUDENT_H_FILE
-# define STUDENT_H_FILE "000000.h"
+# define STUDENT_H_FILE "104360_extra.h"
 #endif
 
 
@@ -89,6 +89,42 @@
       
           // Heapify root element to get highest element at root again
           heapify(arr, i, 0);
+        }
+    }
+
+    void heapify2d(integer_t (*arr)[2], int n, int i) {
+        // Find largest among root, left child and right child
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+      
+        if (left < n && arr[left][0] > arr[largest][0])
+          largest = left;
+      
+        if (right < n && arr[right][0] > arr[largest][0])
+          largest = right;
+      
+        // Swap and continue heapifying if root is not largest
+        if (largest != i) {
+          swap(&arr[i][0], &arr[largest][0]);
+          swap(&arr[i][1], &arr[largest][1]);
+          heapify2d(arr, n, largest);
+        }
+    }
+      
+
+    void heapSort2d(integer_t (*arr)[2], int n) {
+        // Build max heap
+        for (int i = n / 2 - 1; i >= 0; i--)
+          heapify2d(arr, n, i);
+      
+        // Heap sort
+        for (int i = n - 1; i >= 0; i--) {
+          swap(&arr[0][0], &arr[i][0]);
+          swap(&arr[0][1], &arr[i][1]);
+      
+          // Heapify root element to get highest element at root again
+          heapify2d(arr, i, 0);
         }
     }
   //
@@ -303,6 +339,207 @@
     //
   //
 
+  // Schroeppel and Shamir technique
+
+    //Create Array(x[][2]) composed by all the possible sums of a given Array(a[]) and the cominations
+      void calcsubarray2d(integer_t a[], integer_t (*x)[2], int n, int c){
+
+        integer_t s;
+        
+        for (int i=0; i<(1<<n); i++)
+        {
+          s = 0;
+          integer_t cmb = 0;
+          
+          for (int j=0; j<n; j++){
+            if (i & (1<<j)){
+              s += a[j+c];
+              cmb += pow(2, j+c);
+            }    
+          }
+
+          if(s >= 0){
+            x[i][0] = s;
+            x[i][1] = cmb;  
+          }
+        }
+      } 
+    //
+
+    // Heapify for Min Heap
+      void min_heapify(int (*arr)[2], int n, integer_t (*A)[2] , integer_t (*B)[2] ,int i){
+
+        int smallest = i; // Initialize largest as root
+        int l = 2 * i + 1; // down left = 2*i + 1
+        int r = 2 * i + 2; // down right = 2*i + 2
+    
+        // If left child is larger than root
+        if (l < n && A[arr[l][0]][0] + B[arr[l][1]][0]  <= A[arr[smallest][0]][0] + B[arr[smallest][1]][0])
+          smallest = l;
+    
+        // If right child is larger than largest so far
+        if (r < n && A[arr[r][0]][0] + B[arr[r][1]][0]  <= A[arr[smallest][0]][0] + B[arr[smallest][1]][0])
+          smallest = r;
+    
+        // If largest is not root
+        if (smallest != i) {
+
+          int temp_array_0 = arr[smallest][0]; int temp_array_1 = arr[smallest][1];
+          arr[smallest][0] =arr[i][0];
+          arr[smallest][1] =arr[i][1];
+          arr[i][0] = temp_array_0;
+          arr[i][1] = temp_array_1;
+
+          // Recursively heapify the affected sub-tree
+          min_heapify(arr, n, A, B ,smallest);
+        }
+      }
+    //  
+    
+    // Create Min Heap
+      void generateMinHeap(int (*minheap)[2] , integer_t (*A)[2],integer_t (*B)[2],int size_a,int size_b){
+
+        // Generate tree from array indexes
+        int heap_iter = 0;
+        for(int i = 0; i < size_a; i++){
+          for (int j = 0; j < size_b; j++){
+            minheap[heap_iter][0] = i;
+            minheap[heap_iter][1] = j;
+            heap_iter+=1;
+          }
+        }
+        
+        // Perform reverse level order traversal
+        // from last non-leaf node and heapify
+        int startIdx = ( (size_a*size_b) / 2) - 1;
+
+        // each node
+        for (int i = startIdx; i >= 0; i--) {
+          min_heapify(minheap, size_a*size_b , A, B ,i);
+        }
+
+      }
+    //
+
+    // Heapify for Max Heap
+      void max_heapify(int (*arr)[2], int n, integer_t (*A)[2] , integer_t (*B)[2] ,int i){
+
+        int largest = i; // Initialize largest as root
+        int l = 2 * i + 1; // down left = 2*i + 1
+        int r = 2 * i + 2; // down right = 2*i + 2
+  
+        // If left child is larger than root
+        if (l < n && A[arr[l][0]][0] + B[arr[l][1]][0]  >= A[arr[largest][0]][0] + B[arr[largest][1]][0])
+          largest = l;
+  
+        // If right child is larger than largest so far
+        if (r < n && A[arr[r][0]][0] + B[arr[r][1]][0]  >= A[arr[largest][0]][0] + B[arr[largest][1]][0])
+          largest = r;
+  
+        // If largest is not root
+        if (largest != i) {
+          int temp_array_0 = arr[largest][0]; int temp_array_1 = arr[largest][1];
+          arr[largest][0] =arr[i][0];
+          arr[largest][1] =arr[i][1];
+          arr[i][0] = temp_array_0;
+          arr[i][1] = temp_array_1;
+
+          // Recursively heapify the affected sub-tree
+          max_heapify(arr, n, A, B ,largest);
+        }
+      }
+    //
+
+    // Create Max Heap
+      void generateMaxHeap(int (*maxheap)[2] , integer_t (*C)[2],integer_t (*D)[2],int size_c,int size_d){
+
+        // Generate tree from array indexes
+        int heap_iter = 0;
+        for(int i = 0; i < size_c; i++){
+          for (int j = 0; j < size_d; j++){
+            maxheap[heap_iter][0] = i;
+            maxheap[heap_iter][1] = j;
+            heap_iter+=1;
+          }
+        }
+
+        // Perform reverce level order traversal
+        // from last non-leaf node and heapify
+        int startIdx = ( (size_c*size_d) / 2) - 1;
+        // each node
+        for (int i = startIdx; i >= 0; i--) {
+          max_heapify(maxheap, size_c*size_d , C, D ,i);
+        }
+      }
+    //
+
+    //Algorithm itself
+      integer_t SS(int n, integer_t *p, integer_t desired_sum){
+
+        // pega o tamanho
+        int a = (n/2)/2;
+        int b = ((n/2) - (n/2)/2);
+        int c = (n - n/2)/2;
+        int d = ((n - n/2) - (n - n/2)/2);
+
+        // arranja espaço para as somas
+        integer_t (*A)[2] = malloc(sizeof(integer_t)*(1<<a) * 2);
+        integer_t (*B)[2] = malloc(sizeof(integer_t)*(1<<b) * 2);
+        integer_t (*C)[2] = malloc(sizeof(integer_t)*(1<<c) * 2);
+        integer_t (*D)[2] = malloc(sizeof(integer_t)*(1<<d) * 2);
+
+        calcsubarray2d(p, A, a, 0);
+        calcsubarray2d(p, B, b, a);
+        calcsubarray2d(p, C, c, a + b);
+        calcsubarray2d(p, D, d, a + b + c);
+
+        heapSort2d(A,(1<<a));
+        heapSort2d(B,(1<<b));
+        heapSort2d(C,(1<<c));
+        heapSort2d(D,(1<<d));
+
+        int (*minheap)[2] = malloc(sizeof(int)* 2 * ((1<<a) * (1<<b)));
+
+        generateMinHeap(minheap, A, B,(1<<a),(1<<b));
+
+        int (*maxheap)[2] = malloc(sizeof(int)* 2 * ((1<<c) * (1<<d)));
+
+        generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
+
+        integer_t soma;
+        integer_t soma2;
+        for (int i = 0;i<((1<<c) * (1<<d));i++){
+          if (C[maxheap[i][0]][0] + D[maxheap[i][1]][0] > desired_sum){
+            continue;
+          }
+
+          for (int j = 0;j<((1<<a) * (1<<b));j++){
+            soma = A[minheap[j][0]][0] + B[minheap[j][1]][0] + C[maxheap[i][0]][0] + D[maxheap[i][1]][0]; 
+            soma2 = A[minheap[j][0]][1] + B[minheap[j][1]][1] + C[maxheap[i][0]][1] + D[maxheap[i][1]][1]; 
+            if (soma == desired_sum){
+              free(A);
+              free(B);
+              free(C);
+              free(D);
+              free(minheap);
+              free(maxheap); 
+              return soma2;
+            }
+          }
+        }
+          
+           
+        free(A);
+        free(B);
+        free(C);
+        free(D);
+        free(minheap);
+        free(maxheap);
+        return 0;
+      }
+    //
+
+  //
 //
 
 //Converter (converts a decimal number to binary, used to get the commbinations)
@@ -357,7 +594,7 @@ int main(void)
  
 
   // Loop for n's
-  for(int i = 0;i < n_problems;i++){
+  for(int i = 47;i < 48;i++){
   
     printf("--------------------------- \n");
                 
@@ -387,7 +624,7 @@ int main(void)
       integer_t sum = all_subset_sum_problems[i].sums[j];
       double tmp_dt;
 
-        
+        /*
         // Iterative
         tmp_dt = cpu_time();   
         int comb = Bf_Iter(n, p, sum);
@@ -436,16 +673,21 @@ int main(void)
           dt_f_mitm_max = tmp_dt;
         }
         dt_f_mitm += tmp_dt;
-
+        */
+        // Schroeppel and Shamir technique
+          
+        integer_t z= SS(n, p, sum);
+ 
 
  
         // print results
-        printf("-------------------------------------------------\n");
-        printf("Brute force                   %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
-        printf("Brute force recursiva         %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
-        printf("Brute force recur smart       %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
-        printf("Meet in the middle            %d,  %lld || %i  \n", j ,sum, x);
-        printf("Faster meet in the middle     %d,  %lld || %i  \n", j ,sum, y);
+        printf("-------------------------------------------------\n");/*
+        printf("Brute force                           %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+        printf("Brute force recursiva                 %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
+        printf("Brute force recur smart               %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
+        printf("Meet in the middle                    %d,  %lld || %i  \n", j ,sum, x);
+        printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);*/
+        printf("Schroeppel and Shamir technique       %d,  %lld || %lld -> %s  \n", j ,sum,z,   Converter(n, z, comb_bin)); 
             
       }
 
