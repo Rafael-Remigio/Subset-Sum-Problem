@@ -301,11 +301,7 @@ void min_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
         arr[smallest][1] =arr[i][1];
         arr[i][0] = temp_array_0;
         arr[i][1] = temp_array_1;
-/*         printf("\nswap %i ---> %i\n      %lli ---> %lli",i, smallest,A[arr[i][0]] + B[arr[i][1]],A[arr[smallest][0]] + B[arr[smallest][1]]);
-        for (int i = 0;i< n;i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,arr[i][0],arr[i][1], A[arr[i][0]] + B[arr[i][1]]);
-        }
-        printf("\n--------------------------"); */
+
         // Recursively heapify the affected sub-tree
         min_heapify(arr, n, A, B ,smallest);
     }
@@ -322,8 +318,6 @@ void generateMinHeap(int (*minheap)[2] , integer_t A[],integer_t B[],int size_a,
                 heap_iter+=1;
             }
         }
-
-        
         
         // Perform reverse level order traversal
         // from last non-leaf node and heapify
@@ -357,11 +351,7 @@ void max_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
         arr[largest][1] =arr[i][1];
         arr[i][0] = temp_array_0;
         arr[i][1] = temp_array_1;
-/*         printf("\nswap %i ---> %i\n      %lli ---> %lli",i, smallest,A[arr[i][0]] + B[arr[i][1]],A[arr[smallest][0]] + B[arr[smallest][1]]);
-        for (int i = 0;i< n;i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,arr[i][0],arr[i][1], A[arr[i][0]] + B[arr[i][1]]);
-        }
-        printf("\n--------------------------"); */
+
         // Recursively heapify the affected sub-tree
         max_heapify(arr, n, A, B ,largest);
     }
@@ -425,34 +415,6 @@ int SS(int n, integer_t *p, integer_t desired_sum){
 
         generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
 
-        
-/*         for (int i = 0;i< (1<<a) * (1<<b);i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
-        }
-        printf("\n----------------------------------------------");
-        for (int i = 0;i< (1<<c)*(1<<d);i++){
-            printf("\nmaxheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
-        }
- */
-/*         for(int i = 0;i < (1<<a);i++){
-            for(int j = 0;j < (1<<b);j++){
-                for(int h = 0;h < (1<<c);h++){
-                    for(int g = 0;g < (1<<d);g++){
-                        integer_t soma  = A[i] + B[j] + C[h]+D[g];
-                        if (desired_sum==soma){
-                            printf("\nsum is %llu \n",soma);
-                            printf("\nindexes are : %i -- %i -- %i -- %i\n",i,j,h,g);
-                                    free(A);
-                                    free(B);
-                                    free(C);
-                                    free(D);
-                                    free(minheap);
-                            return 1;
-                        }
-                    }   
-                }
-            }
-        } */
         integer_t soma;
         for (int i = 0;i<((1<<c) * (1<<d));i++){
             if (C[maxheap[i][0]] + D[maxheap[i][1]] > desired_sum){
