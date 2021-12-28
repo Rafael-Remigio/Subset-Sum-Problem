@@ -323,22 +323,17 @@ void generateMinHeap(int (*minheap)[2] , integer_t A[],integer_t B[],int size_a,
             }
         }
 
-        for (int i = 0;i< size_a*size_b;i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
-        }
         
         
         // Perform reverse level order traversal
         // from last non-leaf node and heapify
         int startIdx = ( (size_a*size_b) / 2) - 1;
-        printf("\n---%i--------------",startIdx);
+
         // each node
         for (int i = startIdx; i >= 0; i--) {
             min_heapify(minheap, size_a*size_b , A, B ,i);
         }
-        for (int i = 0;i< size_a*size_b;i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
-        }
+
 }
 
 void max_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
@@ -388,14 +383,11 @@ void generateMaxHeap(int (*maxheap)[2] , integer_t C[],integer_t D[],int size_c,
         // Perform reverce level order traversal
         // from last non-leaf node and heapify
         int startIdx = ( (size_c*size_d) / 2) - 1;
-        printf("\n---%i--------------",startIdx);
         // each node
         for (int i = startIdx; i >= 0; i--) {
             max_heapify(maxheap, size_c*size_d , C, D ,i);
         }
-        for (int i = 0;i< size_c*size_d;i++){
-            printf("\nmaxheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
-        }
+
 }
 
 
@@ -433,7 +425,16 @@ int SS(int n, integer_t *p, integer_t desired_sum){
 
         generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
 
-        for(int i = 0;i < (1<<a);i++){
+        
+/*         for (int i = 0;i< (1<<a) * (1<<b);i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
+        }
+        printf("\n----------------------------------------------");
+        for (int i = 0;i< (1<<c)*(1<<d);i++){
+            printf("\nmaxheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
+        }
+ */
+/*         for(int i = 0;i < (1<<a);i++){
             for(int j = 0;j < (1<<b);j++){
                 for(int h = 0;h < (1<<c);h++){
                     for(int g = 0;g < (1<<d);g++){
@@ -451,7 +452,9 @@ int SS(int n, integer_t *p, integer_t desired_sum){
                     }   
                 }
             }
-        }
+        } */
+
+
         
         
         printf("\n not found \n");
@@ -460,6 +463,7 @@ int SS(int n, integer_t *p, integer_t desired_sum){
         free(C);
         free(D);
         free(minheap);
+        free(maxheap);
         return 0;
 }
 
