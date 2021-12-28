@@ -542,7 +542,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 0;i < 15;i++)
+    for(int i = 0;i < n_problems;i++)
     {
         printf("--------------------------- \n");
                 
