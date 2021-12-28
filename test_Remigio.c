@@ -384,10 +384,6 @@ void generateMaxHeap(int (*maxheap)[2] , integer_t C[],integer_t D[],int size_c,
             }
         }
 
-        for (int i = 0;i< size_c*size_d;i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
-        }
-        
         
         // Perform reverce level order traversal
         // from last non-leaf node and heapify
@@ -395,10 +391,10 @@ void generateMaxHeap(int (*maxheap)[2] , integer_t C[],integer_t D[],int size_c,
         printf("\n---%i--------------",startIdx);
         // each node
         for (int i = startIdx; i >= 0; i--) {
-            min_heapify(maxheap, size_c*size_d , C, D ,i);
+            max_heapify(maxheap, size_c*size_d , C, D ,i);
         }
         for (int i = 0;i< size_c*size_d;i++){
-            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
+            printf("\nmaxheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
         }
 }
 
@@ -432,6 +428,10 @@ int SS(int n, integer_t *p, integer_t desired_sum){
         int (*minheap)[2] = malloc(sizeof(int)* 2 * ((1<<a) * (1<<b)));
 
         generateMinHeap(minheap, A, B,(1<<a),(1<<b));
+
+        int (*maxheap)[2] = malloc(sizeof(int)* 2 * ((1<<c) * (1<<d)));
+
+        generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
 
         for(int i = 0;i < (1<<a);i++){
             for(int j = 0;j < (1<<b);j++){
