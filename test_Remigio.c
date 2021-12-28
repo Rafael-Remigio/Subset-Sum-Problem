@@ -121,11 +121,11 @@ void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
     
 } 
 
-void swap2(int *a[2], int *b[2]) {
+/* void swap2(int *a[2], int *b[2]) {
     int temp = *a;
     *a = *b;
     *b = temp;
-}
+} */
 
  
 void swap(integer_t *a, integer_t *b) {
@@ -296,8 +296,16 @@ void min_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
  
     // If largest is not root
     if (smallest != i) {
-        swap2(&arr[i],&arr[smallest]);
- 
+        int temp_array_0 = arr[smallest][0]; int temp_array_1 = arr[smallest][1];
+        arr[smallest][0] =arr[i][0];
+        arr[smallest][1] =arr[i][1];
+        arr[i][0] = temp_array_0;
+        arr[i][1] = temp_array_1;
+/*         printf("\nswap %i ---> %i\n      %lli ---> %lli",i, smallest,A[arr[i][0]] + B[arr[i][1]],A[arr[smallest][0]] + B[arr[smallest][1]]);
+        for (int i = 0;i< n;i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,arr[i][0],arr[i][1], A[arr[i][0]] + B[arr[i][1]]);
+        }
+        printf("\n--------------------------"); */
         // Recursively heapify the affected sub-tree
         min_heapify(arr, n, A, B ,smallest);
     }
@@ -332,6 +340,70 @@ void generateMinHeap(int (*minheap)[2] , integer_t A[],integer_t B[],int size_a,
             printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,minheap[i][0],minheap[i][1], A[minheap[i][0]] + B[minheap[i][1]]);
         }
 }
+
+void max_heapify(int (*arr)[2], int n, integer_t A[] , integer_t B[] ,int i)
+{
+    int largest = i; // Initialize largest as root
+    int l = 2 * i + 1; // down left = 2*i + 1
+    int r = 2 * i + 2; // down right = 2*i + 2
+ 
+    // If left child is larger than root
+    if (l < n && A[arr[l][0]] + B[arr[l][1]]  >= A[arr[largest][0]] + B[arr[largest][1]])
+        largest = l;
+ 
+    // If right child is larger than largest so far
+    if (r < n && A[arr[r][0]] + B[arr[r][1]]  >= A[arr[largest][0]] + B[arr[largest][1]])
+        largest = r;
+ 
+    // If largest is not root
+    if (largest != i) {
+        int temp_array_0 = arr[largest][0]; int temp_array_1 = arr[largest][1];
+        arr[largest][0] =arr[i][0];
+        arr[largest][1] =arr[i][1];
+        arr[i][0] = temp_array_0;
+        arr[i][1] = temp_array_1;
+/*         printf("\nswap %i ---> %i\n      %lli ---> %lli",i, smallest,A[arr[i][0]] + B[arr[i][1]],A[arr[smallest][0]] + B[arr[smallest][1]]);
+        for (int i = 0;i< n;i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,arr[i][0],arr[i][1], A[arr[i][0]] + B[arr[i][1]]);
+        }
+        printf("\n--------------------------"); */
+        // Recursively heapify the affected sub-tree
+        max_heapify(arr, n, A, B ,largest);
+    }
+
+}
+void generateMaxHeap(int (*maxheap)[2] , integer_t C[],integer_t D[],int size_c,int size_d){
+
+        // Generate tree from array indexes
+        int heap_iter = 0;
+        for(int i = 0; i < size_c; i++){
+            for (int j = 0; j < size_d; j++){
+                maxheap[heap_iter][0] = i;
+                maxheap[heap_iter][1] = j;
+                heap_iter+=1;
+            }
+        }
+
+        for (int i = 0;i< size_c*size_d;i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
+        }
+        
+        
+        // Perform reverce level order traversal
+        // from last non-leaf node and heapify
+        int startIdx = ( (size_c*size_d) / 2) - 1;
+        printf("\n---%i--------------",startIdx);
+        // each node
+        for (int i = startIdx; i >= 0; i--) {
+            min_heapify(maxheap, size_c*size_d , C, D ,i);
+        }
+        for (int i = 0;i< size_c*size_d;i++){
+            printf("\nminheap[%i] = [%i,%i]\t=  %llu",i,maxheap[i][0],maxheap[i][1], C[maxheap[i][0]] + D[maxheap[i][1]]);
+        }
+}
+
+
+
 
 int SS(int n, integer_t *p, integer_t desired_sum){
 
