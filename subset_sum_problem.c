@@ -10,7 +10,7 @@
 # error "This code must must be compiled in c99 mode or later (-std=c99)" // to handle the unsigned long long data type
 #endif
 #ifndef STUDENT_H_FILE
-# define STUDENT_H_FILE "104360_extra.h"
+# define STUDENT_H_FILE "102435.h"
 #endif
 
 
@@ -580,6 +580,8 @@ int main(void)
   FILE *fp_8 = NULL;
   FILE *fp_9 = NULL;
   FILE *fp_10 = NULL;
+  FILE *fp_11 = NULL;
+  FILE *fp_12 = NULL;
   fp_1 = fopen("data_1.log", "a");
   fp_2 = fopen("data_1_max.log", "a");
   fp_3 = fopen("data_2.log", "a");
@@ -590,11 +592,13 @@ int main(void)
   fp_8 = fopen("data_4_max.log", "a");
   fp_9 = fopen("data_5.log", "a");
   fp_10 = fopen("data_5_max.log", "a");
+  fp_11 = fopen("data_6.log", "a");
+  fp_12 = fopen("data_6_max.log", "a");
     
  
 
   // Loop for n's
-  for(int i = 47;i < 48;i++){
+  for(int i = 0;i < 14;i++){
   
     printf("--------------------------- \n");
                 
@@ -617,6 +621,8 @@ int main(void)
     double dt_mitm_max = 0;
     double dt_f_mitm = 0;     
     double dt_f_mitm_max = 0;
+    double dt_ss = 0;     
+    double dt_ss_max = 0;
 
     // Loop for sum's
     for(int j = 0;j < n_sums;j++){
@@ -624,7 +630,7 @@ int main(void)
       integer_t sum = all_subset_sum_problems[i].sums[j];
       double tmp_dt;
 
-        /*
+        
         // Iterative
         tmp_dt = cpu_time();   
         int comb = Bf_Iter(n, p, sum);
@@ -632,7 +638,7 @@ int main(void)
         if(tmp_dt > dt_bf_i_max){
           dt_bf_i_max = tmp_dt;
         }
-        dt_bf_i += tmp_dt;
+        dt_bf_i += tmp_dt;/*
 
 
         // Recursive
@@ -673,28 +679,34 @@ int main(void)
           dt_f_mitm_max = tmp_dt;
         }
         dt_f_mitm += tmp_dt;
-        */
+        
+
         // Schroeppel and Shamir technique
-          
+
+        tmp_dt = cpu_time();    
         integer_t z= SS(n, p, sum);
- 
+        tmp_dt = cpu_time() - tmp_dt;
+        if(tmp_dt > dt_ss_max){
+          dt_ss_max = tmp_dt;
+        }
+        dt_ss += tmp_dt;*/
 
  
         // print results
-        printf("-------------------------------------------------\n");/*
-        printf("Brute force                           %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+        printf("-------------------------------------------------\n");
+        printf("Brute force                           %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));/*
         printf("Brute force recursiva                 %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
         printf("Brute force recur smart               %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
         printf("Meet in the middle                    %d,  %lld || %i  \n", j ,sum, x);
-        printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);*/
-        printf("Schroeppel and Shamir technique       %d,  %lld || %lld -> %s  \n", j ,sum,z,   Converter(n, z, comb_bin)); 
+        printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);
+        printf("Schroeppel and Shamir technique       %d,  %lld || %lld -> %s  \n", j ,sum,z,   Converter(n, z, comb_bin)); */
             
       }
 
       // store times (commented beacause we already took the data needed)
-      /*
+      
       fprintf(fp_1,"%i %f \n",n, dt_bf_i/20);
-      fprintf(fp_2,"%i %f \n",n, dt_bf_i_max);
+      fprintf(fp_2,"%i %f \n",n, dt_bf_i_max);/*
       fprintf(fp_3,"%i %f \n",n, dt_bf_r/20);
       fprintf(fp_4,"%i %f \n",n, dt_bf_r_max);
       fprintf(fp_5,"%i %f \n",n, dt_bf_i_s/20);
@@ -703,7 +715,8 @@ int main(void)
       fprintf(fp_8,"%i %f \n",n, dt_mitm_max);
       fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
       fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);
-      */
+      fprintf(fp_11,"%i %f \n",n, dt_ss/20);
+      fprintf(fp_12,"%i %f \n",n, dt_ss_max);*/
 
     }     
 

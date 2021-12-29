@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "elapsed_time.h"
-#include "000000.h"
+#include "104360.h"
 #include <string.h>
 #include <math.h>
 #define min_n       10
@@ -237,11 +237,12 @@ int main(void)
     printf("  n_sums ...... %d\n",n_sums);
     printf("  n_problems .. %d\n",n_problems);
     printf("  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
+    printf("  104360 \n");
     printf("\n");
      
 
    // start looping for n's
-    for(int i = 20;i < n_problems;i++)
+    for(int i = 40;i < 41;i++)
     {
         printf("--------------------------- \n");
                 
@@ -264,8 +265,10 @@ int main(void)
         for(int j = 0;j < n_sums;j++)
         {   
             integer_t sum = all_subset_sum_problems[i].sums[j];
+            double tmp_dt;
 
             // run function and take time 
+            /*
             double tmp_dt = cpu_time();   
             //integer_t comb = Bf_Iter(n, p, sum);
             tmp_dt = cpu_time() - tmp_dt;
@@ -281,6 +284,8 @@ int main(void)
             tmp_dt = cpu_time() - tmp_dt;
             dt_bf_i_s += tmp_dt;
 
+            */
+        
             tmp_dt = cpu_time();   
            
             integer_t x= mitm(n, p, sum);
@@ -305,29 +310,6 @@ int main(void)
     }   
 
 
-    /*
-     for(int i = 0;i < 15;i++)
-    {
-        printf("--------------------------- \n");
- 
-        // get n
-        int n = all_subset_sum_problems[i].n;    
-        char comb_bin[n+1];
-        printf("n =  %i\n\n",n);
-        // get p and sums
-        integer_t *p = all_subset_sum_problems[i].p;    
-        integer_t *sums = all_subset_sum_problems[i].sums; 
-        
-        for(int j = 0;j < n_sums;j++){   
-            integer_t sum = all_subset_sum_problems[i].sums[j];
-            int combination = print_all_sums_recursive(n,0, p,0,0,sum);
-            printf("\nsoma = %llu --- solution = %s ", sum ,Converter(n, combination, comb_bin));
-
-        }
-
-    } 
-    return 0;
-
-    */
+  
     
 }

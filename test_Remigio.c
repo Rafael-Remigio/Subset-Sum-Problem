@@ -473,6 +473,8 @@ int main(void){
     FILE *fp_8 = NULL;
     FILE *fp_9 = NULL;
     FILE *fp_10 = NULL;
+    FILE *fp_11 = NULL;
+  FILE *fp_12 = NULL;
 	
 	remove("data.log");    
     /* Open for the first time the file provided as argument */
@@ -490,6 +492,9 @@ int main(void){
 
     fp_9 = fopen("data_5.log", "a");
     fp_10 = fopen("data_5_max.log", "a");
+
+    fp_11 = fopen("data_6.log", "a");
+    fp_12 = fopen("data_6_max.log", "a");
     
  
     
@@ -504,7 +509,7 @@ int main(void){
      
 
    // start looping for n's
-    for(int i = 50;i < 51;i++)
+    for(int i = 0;i < 26;i++)
     {
         printf("--------------------------- \n");
                 
@@ -528,6 +533,8 @@ int main(void){
         double dt_mitm_max = 0;
         double dt_f_mitm = 0;     
         double dt_f_mitm_max = 0;
+        double dt_ss = 0;     
+    double dt_ss_max = 0;
 
         // loop for sums
         for(int j = 0;j < n_sums;j++)
@@ -577,7 +584,13 @@ int main(void){
             }
             dt_mitm += tmp_dt;
  */
-            int y = SS(n, p, sum);
+            tmp_dt = cpu_time();    
+            int z= SS(n, p, sum);
+            tmp_dt = cpu_time() - tmp_dt;
+            if(tmp_dt > dt_ss_max){
+                dt_ss_max = tmp_dt;
+            }
+            dt_ss += tmp_dt;
             /*
 
             tmp_dt = cpu_time();   
@@ -597,9 +610,10 @@ int main(void){
             //printf("Brute force             %d,  %lld || %i -> %s \n", j ,sum, comb, Converter(n, comb, comb_bin));
 /*             printf("Meet in the middle      %d,  %lld || %i  \n", j ,sum, x); */
             //printf("Faster meet in the middle      %d,  %lld || %i  \n", j ,sum, y);
+            printf("Schroeppel and Shamir technique       %d,  %lld \n", j ,sum ); 
             
         }
-
+ 
         // store times 
         /*
         fprintf(fp_1,"%i %f \n",n, dt_bf_i/20);
@@ -612,6 +626,8 @@ int main(void){
         fprintf(fp_8,"%i %f \n",n, dt_mitm_max); *//*
         fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
         fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);*/
+        fprintf(fp_11,"%i %f \n",n, dt_ss/20);
+        fprintf(fp_12,"%i %f \n",n, dt_ss_max);
 
     }   
     

@@ -12,6 +12,8 @@ A_7 = load("data_4.log");
 A_8 = load("data_4_max.log");
 A_9 = load("data_5.log");
 A_10 = load("data_5_max.log");
+A_11 = load("data_6.log");
+A_12 = load("data_6_max.log");
 
 
  %se coluda 2==1  %coluna
@@ -44,13 +46,42 @@ f_V1_9 = A_9(:, 2);
 
 n_V1_10 = A_10(:, 1);
 f_V1_10 = A_10(:, 2);
+
+
+n_V1_11 = A_11(:, 1);
+f_V1_11 = A_11(:, 2); 
+
+n_V1_12 = A_12(:, 1);
+f_V1_12 = A_12(:, 2);
     
  
 
 
-semilogy(n_V1_1, f_V1_1, n_V1_2, f_V1_2, n_V1_3, f_V1_3, n_V1_4, f_V1_4, n_V1_5, f_V1_5, n_V1_6, f_V1_6, n_V1_7, f_V1_7, n_V1_8, f_V1_8, n_V1_9, f_V1_9, n_V1_10, f_V1_10);
+%semilogy(n_V1_1, f_V1_1, n_V1_2, f_V1_2, n_V1_3, f_V1_3, n_V1_4, f_V1_4, n_V1_5, f_V1_5, n_V1_6, f_V1_6, n_V1_7, f_V1_7, n_V1_8, f_V1_8, n_V1_9, f_V1_9, n_V1_10, f_V1_10, n_V1_11, f_V1_11, n_V1_12, f_V1_12);
 
-legend('Iterative', 'worst Iterative','Recursive','worst Recursive','Recursive Smart','worst Recursive Smart','Meet in the meedle','worst Meet in the meedle','Fast Meet in the meedle','worst Fast Meet in the meedle');
+
+
+%legend('Iterative', 'worst Iterative','Recursive','worst Recursive','Recursive Smart','worst Recursive Smart','Meet in the meedle','worst Meet in the meedle','Fast Meet in the meedle','worst Fast Meet in the meedle','Schroeppel and Shamir technique','worst Schroeppel and Shamir technique');
+
+figure(1);    
+semilogy(n_V1_1, f_V1_1, n_V1_2, f_V1_2); 
+xlim([0,60]);
+figure(2);   
+semilogy(n_V1_3, f_V1_3, n_V1_4, f_V1_4);
+xlim([0,60]);
+figure(3);     
+semilogy(n_V1_5, f_V1_5,n_V1_6, f_V1_6); 
+xlim([0,60]);
+figure(4);     
+semilogy(n_V1_7, f_V1_7,n_V1_8, f_V1_8); 
+xlim([0,60]);
+figure(5);     
+semilogy(n_V1_9, f_V1_9,n_V1_10, f_V1_10); 
+xlim([0,60]);
+figure(6);    
+semilogy(n_V1_11, f_V1_11, n_V1_12, f_V1_12); 
+xlim([0,60]);  
 
 grid on
-xlim([0,60]); 
+ 
+
