@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "elapsed_time.h"
-#include "104360.h"
+#include "102435.h"
 #include <string.h>
 #include <math.h>
 #define min_n       10
@@ -237,12 +237,12 @@ int main(void)
     printf("  n_sums ...... %d\n",n_sums);
     printf("  n_problems .. %d\n",n_problems);
     printf("  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
-    printf("  104360 \n");
+    printf("  102435 \n");
     printf("\n");
      
 
    // start looping for n's
-    for(int i = 40;i < 41;i++)
+    for(int i = 47;i < 48;i++)
     {
         printf("--------------------------- \n");
                 
