@@ -1,0 +1,5 @@
+https://www.degruyter.com/document/doi/10.1515/comp-2020-0212/html
+Optimal Sequential Multi-Way Number Partitioning Richard E. Korf, Ethan L. Schreiber, and Michael D. Moffitt
+Shamir's Attack on the Basic Merkle-Hellman Knapsack Cryptosystem
+https://rjlipton.wpcomstaging.com/2012/12/19/branch-and-bound-why-does-it-work/
+https://en.wikipedia.org/
