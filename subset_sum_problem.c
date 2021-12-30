@@ -540,6 +540,103 @@
     //
 
   //
+
+  // Schroeppel and Shamir technique by Teles
+
+    //Create Array(x[][2]) composed by all the possible sums of a given Array(a[]) and the cominations
+      void calcsubarray2d(integer_t a[], integer_t (*x)[2], int n, int c){
+
+        integer_t s;
+        
+        for (int i=0; i<(1<<n); i++)
+        {
+          s = 0;
+          integer_t cmb = 0;
+          
+          for (int j=0; j<n; j++){
+            if (i & (1<<j)){
+              s += a[j+c];
+              cmb += pow(2, j+c);
+            }    
+          }
+
+          if(s >= 0){
+            x[i][0] = s;
+            x[i][1] = cmb;  
+          }
+        }
+      } 
+    //
+
+     
+
+    //Algorithm itself
+      integer_t SS(int n, integer_t *p, integer_t desired_sum){
+
+        // pega o tamanho
+        int a = (n/2)/2;
+        int b = ((n/2) - (n/2)/2);
+        int c = (n - n/2)/2;
+        int d = ((n - n/2) - (n - n/2)/2);
+
+        // arranja espaço para as somas
+        integer_t (*A)[2] = malloc(sizeof(integer_t)*(1<<a) * 2);
+        integer_t (*B)[2] = malloc(sizeof(integer_t)*(1<<b) * 2);
+        integer_t (*C)[2] = malloc(sizeof(integer_t)*(1<<c) * 2);
+        integer_t (*D)[2] = malloc(sizeof(integer_t)*(1<<d) * 2);
+
+        calcsubarray2d(p, A, a, 0);
+        calcsubarray2d(p, B, b, a);
+        calcsubarray2d(p, C, c, a + b);
+        calcsubarray2d(p, D, d, a + b + c);
+
+        heapSort2d(A,(1<<a));
+        heapSort2d(B,(1<<b));
+        heapSort2d(C,(1<<c));
+        heapSort2d(D,(1<<d));
+
+        int (*minheap)[2] = malloc(sizeof(int)* 2 * ((1<<a) * (1<<b)));
+
+        generateMinHeap(minheap, A, B,(1<<a),(1<<b));
+
+        int (*maxheap)[2] = malloc(sizeof(int)* 2 * ((1<<c) * (1<<d)));
+
+        generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
+
+        integer_t soma;
+        integer_t soma2;
+        for (int i = 0;i<((1<<c) * (1<<d));i++){
+          if (C[maxheap[i][0]][0] + D[maxheap[i][1]][0] > desired_sum){
+            continue;
+          }
+
+          for (int j = 0;j<((1<<a) * (1<<b));j++){
+            soma = A[minheap[j][0]][0] + B[minheap[j][1]][0] + C[maxheap[i][0]][0] + D[maxheap[i][1]][0]; 
+            soma2 = A[minheap[j][0]][1] + B[minheap[j][1]][1] + C[maxheap[i][0]][1] + D[maxheap[i][1]][1]; 
+            if (soma == desired_sum){
+              free(A);
+              free(B);
+              free(C);
+              free(D);
+              free(minheap);
+              free(maxheap); 
+              return soma2;
+            }
+          }
+        }
+          
+           
+        free(A);
+        free(B);
+        free(C);
+        free(D);
+        free(minheap);
+        free(maxheap);
+        return 0;
+      }
+    //
+
+  //
 //
 
 //Converter (converts a decimal number to binary, used to get the commbinations)
@@ -598,7 +695,7 @@ int main(void)
  
 
   // Loop for n's
-  for(int i = 0;i < n_problems;i++){
+  for(int i = 0;i < 1;i++){
   
     printf("--------------------------- \n");
                 
