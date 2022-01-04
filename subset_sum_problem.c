@@ -10,7 +10,7 @@
 # error "This code must must be compiled in c99 mode or later (-std=c99)" // to handle the unsigned long long data type
 #endif
 #ifndef STUDENT_H_FILE
-# define STUDENT_H_FILE "102435.h"
+# define STUDENT_H_FILE "000000.h"
 #endif
 
 
@@ -542,100 +542,209 @@
   //
 
   // Schroeppel and Shamir technique by Teles
-
-    //Create Array(x[][2]) composed by all the possible sums of a given Array(a[]) and the cominations
-      void calcsubarray2d(integer_t a[], integer_t (*x)[2], int n, int c){
-
-        integer_t s;
-        
-        for (int i=0; i<(1<<n); i++)
-        {
-          s = 0;
-          integer_t cmb = 0;
-          
-          for (int j=0; j<n; j++){
-            if (i & (1<<j)){
-              s += a[j+c];
-              cmb += pow(2, j+c);
-            }    
-          }
-
-          if(s >= 0){
-            x[i][0] = s;
-            x[i][1] = cmb;  
-          }
-        }
-      } 
-    //
-
      
+    void swapInt(int *a, int *b) {
+      integer_t temp = *a;
+      *a = *b;
+      *b = temp;
+    } 
+
+    //MIN
+    int iMinIndices[1<<15];
+    int jMinIndices[1<<15];
+    
+    integer_t minHeap[1<<15];
+    int minSize = 0;
+    void MinHeapify(int i){
+    
+      int smallest = i;
+      int l = 2 * i + 1;
+      int r = 2 * i + 2;
+    
+      if(l >= minSize || l < 0)
+        l = -1;
+      if(r >= minSize || r < 0)
+        r = -1;
+    
+      if (l != -1 && minHeap[l] < minHeap[i])
+        smallest = l;
+      else
+        smallest = i;
+    
+      if (r != -1 && minHeap[r] < minHeap[smallest])
+        smallest = r;
+    
+      if (smallest != i)
+      {
+        swap(&minHeap[i], &minHeap[smallest]);
+    
+        swapInt(&iMinIndices[i], &iMinIndices[smallest]);
+        swapInt(&jMinIndices[i], &jMinIndices[smallest]);
+    
+        MinHeapify(smallest);
+      }
+    }
+    void InsertMinHeap(integer_t newNum, int i, int j){
+    
+      if (minSize == 0)
+      {
+        minHeap[0] = newNum;
+        iMinIndices[0]=i;
+        jMinIndices[0]=j;
+        minSize += 1;
+      }
+      else
+      {
+        minHeap[minSize] = newNum;
+        iMinIndices[minSize]=i;
+        jMinIndices[minSize]=j;
+        minSize += 1;
+        for (int i = minSize / 2 - 1; i >= 0; i--)
+        {
+          MinHeapify(i);
+        }
+      }
+    }
+    void MinPop(){
+        // replace first node by last and delete last
+        swap(&minHeap[0], &minHeap[minSize - 1]);
+        swapInt(&iMinIndices[0], &iMinIndices[minSize - 1]);
+        swapInt(&jMinIndices[0], &jMinIndices[minSize - 1]);
+        minSize--;
+    
+        MinHeapify(0);
+    }
+    
+    //MAX
+    int iMaxIndices[1<<15];
+    int jMaxIndices[1<<15];
+    
+    integer_t maxHeap[1<<15];
+    int maxSize = 0;
+    void MaxHeapify(int i){
+    
+      int largest = i;
+      int l = 2 * i + 1;
+      int r = 2 * i + 2;
+      if (l < maxSize && maxHeap[l] > maxHeap[largest])
+        largest = l;
+      if (r < maxSize && maxHeap[r] > maxHeap[largest])
+        largest = r;
+      if (largest != i)
+      {
+        swap(&maxHeap[i], &maxHeap[largest]);
+    
+        swapInt(&iMaxIndices[i], &iMaxIndices[largest]);
+        swapInt(&jMaxIndices[i], &jMaxIndices[largest]);
+    
+        MaxHeapify(largest);
+      }
+    }
+    void InsertMaxHeap(integer_t newNum, int i, int j){
+    
+      if (maxSize == 0)
+      {
+        maxHeap[0] = newNum;
+        iMaxIndices[0]=i;
+        jMaxIndices[0]=j;
+        maxSize += 1;
+      }
+      else
+      {
+        maxHeap[maxSize] = newNum;
+        iMaxIndices[maxSize]=i;
+        jMaxIndices[maxSize]=j;
+        maxSize += 1;
+        for (int i = maxSize / 2 - 1; i >= 0; i--)
+        {
+          MaxHeapify(i);
+        }
+      }
+    }
+    void MaxPop(){
+      // replace first node by last and delete last
+      swap(&maxHeap[0], &maxHeap[maxSize - 1]);
+      swapInt(&iMaxIndices[0], &iMaxIndices[maxSize - 1]);
+      swapInt(&jMaxIndices[0], &jMaxIndices[maxSize - 1]);
+      maxSize--;
+    
+      for (int i = maxSize / 2 - 1; i >= 0; i--)
+      {
+        MaxHeapify(i);
+      }
+    }
 
     //Algorithm itself
-      integer_t SS(int n, integer_t *p, integer_t desired_sum){
-
-        // pega o tamanho
-        int a = (n/2)/2;
-        int b = ((n/2) - (n/2)/2);
-        int c = (n - n/2)/2;
-        int d = ((n - n/2) - (n - n/2)/2);
-
+      int SS_T(int n, integer_t *p, integer_t desired_sum){
+ 
+        int aSize = (n/2)/2;
+        int bSize = ((n/2) - (n/2)/2);
+        int cSize = (n - n/2)/2;
+        int dSize = ((n - n/2) - (n - n/2)/2);
+        
+      
+        int aCombSize = 1<<aSize;
+        int bCombSize = 1<<bSize;
+        int cCombSize = 1<<cSize;
+        int dCombSize = 1<<dSize;
+      
         // arranja espaço para as somas
-        integer_t (*A)[2] = malloc(sizeof(integer_t)*(1<<a) * 2);
-        integer_t (*B)[2] = malloc(sizeof(integer_t)*(1<<b) * 2);
-        integer_t (*C)[2] = malloc(sizeof(integer_t)*(1<<c) * 2);
-        integer_t (*D)[2] = malloc(sizeof(integer_t)*(1<<d) * 2);
+        integer_t *A = malloc(sizeof(integer_t)*aCombSize);
+        integer_t *B = malloc(sizeof(integer_t)*bCombSize);
+        integer_t *C = malloc(sizeof(integer_t)*cCombSize);
+        integer_t *D = malloc(sizeof(integer_t)*dCombSize);
+      
+        faster_calcsubarray(p, A, aSize, 0);
+        faster_calcsubarray(p, B, bSize, aSize);
+        faster_calcsubarray(p, C, cSize, aSize + bSize);
+        faster_calcsubarray(p, D, dSize, aSize + bSize + cSize);
+            
+        for (int k = 0; k < aCombSize; k++){
+          InsertMinHeap(A[k], k, 0);
+        }
 
-        calcsubarray2d(p, A, a, 0);
-        calcsubarray2d(p, B, b, a);
-        calcsubarray2d(p, C, c, a + b);
-        calcsubarray2d(p, D, d, a + b + c);
+        for (int k = 0; k < (cCombSize); k++){
+          InsertMaxHeap(C[k] + D[dCombSize - 1], k, dCombSize - 1);
+        }
+         
+        integer_t K = pow(2,n);
+        integer_t min, max;
+      
+        for (integer_t i = 0; i < K; i++){
+        
+          max = maxHeap[0];
+          min = minHeap[0];
+      
+          int iMin = iMinIndices[0]; int jMin = jMinIndices[0];
+          int iMax = iMaxIndices[0]; int jMax = jMaxIndices[0];
+      
+          integer_t sum = min + max;
 
-        heapSort2d(A,(1<<a));
-        heapSort2d(B,(1<<b));
-        heapSort2d(C,(1<<c));
-        heapSort2d(D,(1<<d));
+          //printf("%lld + %lld = %lld \n", max, min, sum);
 
-        int (*minheap)[2] = malloc(sizeof(int)* 2 * ((1<<a) * (1<<b)));
-
-        generateMinHeap(minheap, A, B,(1<<a),(1<<b));
-
-        int (*maxheap)[2] = malloc(sizeof(int)* 2 * ((1<<c) * (1<<d)));
-
-        generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
-
-        integer_t soma;
-        integer_t soma2;
-        for (int i = 0;i<((1<<c) * (1<<d));i++){
-          if (C[maxheap[i][0]][0] + D[maxheap[i][1]][0] > desired_sum){
-            continue;
+          if (sum == desired_sum)
+            return 1;
+          else if (sum < desired_sum){
+          
+            
+            MinPop();
+            if (jMin + 1 < bCombSize){ 
+              InsertMinHeap(A[iMin] + B[jMin + 1], iMin, jMin + 1);
+            }
           }
-
-          for (int j = 0;j<((1<<a) * (1<<b));j++){
-            soma = A[minheap[j][0]][0] + B[minheap[j][1]][0] + C[maxheap[i][0]][0] + D[maxheap[i][1]][0]; 
-            soma2 = A[minheap[j][0]][1] + B[minheap[j][1]][1] + C[maxheap[i][0]][1] + D[maxheap[i][1]][1]; 
-            if (soma == desired_sum){
-              free(A);
-              free(B);
-              free(C);
-              free(D);
-              free(minheap);
-              free(maxheap); 
-              return soma2;
+          else{
+          
+            MaxPop();
+            if (jMax > 0){ 
+              InsertMaxHeap(C[iMax] + D[jMax - 1], iMax, jMax - 1);
             }
           }
         }
-          
-           
-        free(A);
-        free(B);
-        free(C);
-        free(D);
-        free(minheap);
-        free(maxheap);
+      
         return 0;
       }
     //
-
+     
   //
 //
 
@@ -679,6 +788,8 @@ int main(void)
   FILE *fp_10 = NULL;
   FILE *fp_11 = NULL;
   FILE *fp_12 = NULL;
+  FILE *fp_13 = NULL;
+  FILE *fp_14 = NULL;
   fp_1 = fopen("data_1.log", "a");
   fp_2 = fopen("data_1_max.log", "a");
   fp_3 = fopen("data_2.log", "a");
@@ -691,11 +802,13 @@ int main(void)
   fp_10 = fopen("data_5_max.log", "a");
   fp_11 = fopen("data_6.log", "a");
   fp_12 = fopen("data_6_max.log", "a");
+  fp_13 = fopen("data_7.log", "a");
+  fp_14 = fopen("data_7_max.log", "a");
     
  
 
   // Loop for n's
-  for(int i = 0;i < 1;i++){
+  for(int i = 0;i < n_problems;i++){
   
     printf("--------------------------- \n");
                 
@@ -727,7 +840,7 @@ int main(void)
       integer_t sum = all_subset_sum_problems[i].sums[j];
       double tmp_dt;
 
-        
+      /*
       // Iterative
       tmp_dt = cpu_time();   
       int comb = Bf_Iter(n, p, sum);
@@ -777,26 +890,26 @@ int main(void)
       }
       dt_f_mitm += tmp_dt;
         
-
+      */
       // Schroeppel and Shamir technique
 
       tmp_dt = cpu_time();    
-      integer_t z= SS(n, p, sum);
+      int z= SS_T(n, p, sum);
       tmp_dt = cpu_time() - tmp_dt;
       if(tmp_dt > dt_ss_max){
         dt_ss_max = tmp_dt;
       }
       dt_ss += tmp_dt;
-
+      
  
       // print results
-      printf("-------------------------------------------------\n");
+      printf("-------------------------------------------------\n");/*
       printf("Brute force                           %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
       printf("Brute force recursiva                 %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
       printf("Brute force recur smart               %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
       printf("Meet in the middle                    %d,  %lld || %i  \n", j ,sum, x);
-      printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);
-      printf("Schroeppel and Shamir technique       %d,  %lld || %lld -> %s  \n", j ,sum,z,   Converter(n, z, comb_bin)); 
+      printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);*/
+      printf("Schroeppel and Shamir technique       %d,  %lld || %lld \n", j ,sum,z); 
             
     }
 
@@ -813,7 +926,9 @@ int main(void)
     fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
     fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);
     fprintf(fp_11,"%i %f \n",n, dt_ss/20);
-    fprintf(fp_12,"%i %f \n",n, dt_ss_max);*/
+    fprintf(fp_12,"%i %f \n",n, dt_ss_max);
+    fprintf(fp_13,"%i %f \n",n, dt_ss/20);
+    fprintf(fp_14,"%i %f \n",n, dt_ss_max);*/
 
   }     
 
