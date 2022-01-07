@@ -22,8 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "elapsed_time.h"
-#include STUDENT_H_FILE
-
+#include STUDENT_H_FILE 
 //Sorts
 
   void swap(integer_t *a, integer_t *b) {
@@ -56,7 +55,7 @@
       }
     }
   //
-
+  /*
   //Heap Sort
     void heapify(integer_t arr[], int n, int i) {
         // Find largest among root, left child and right child
@@ -128,9 +127,12 @@
         }
     }
   //
+  */
 // 
 
 //Algorithms
+
+  /*
 
   // Brute Force Iterative Algorithm 
     int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
@@ -243,7 +245,7 @@
         heapSort(X, size_X);
         heapSort(Y, size_Y);
         
-        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
+         
         int i= 0;
         int j= size_Y - 1;
         while(i< size_X && j >= 0){
@@ -315,7 +317,7 @@
         faster_calcsubarray(p, X, n/2, 0);
         faster_calcsubarray(p, Y, n-n/2, n/2); 
           
-        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
+         
         int i= 0;
         int j= size_Y - 1;
         while(i< size_X && j >= 0){
@@ -541,6 +543,34 @@
 
   //
 
+  */
+    // é
+      void faster_calcsubarray(integer_t a[], integer_t x[], int n, int c){
+
+        for (int i=0; i<n; i++)
+        {
+
+          integer_t i1 = (1<<n)-(1<<i);
+          integer_t j1 = i1;
+          integer_t k1 = (1<<n)-(2<<i);
+
+          while(i1 < (1<<n)){
+
+            if(x[i1] <= x[j1] + a[i+c]){
+              x[k1++] = x[i1++];
+            }else{
+              x[k1++] = x[j1++] + a[i+c];   
+            }
+          }
+          while(j1 < (1<<n)){
+            x[j1++] += a[i+c];
+          }
+        }
+
+      }
+    //
+  //
+
   // Schroeppel and Shamir technique by Teles
      
     void swapInt(int *a, int *b) {
@@ -549,116 +579,351 @@
       *b = temp;
     } 
 
-    //MIN
     int iMinIndices[1<<17];
     int jMinIndices[1<<17];
-    
-    integer_t minHeap[1<<17];
-    int minSize = 0;
-    void MinHeapify(int i){
-    
-      int smallest = i;
-      int l = 2 * i + 1;
-      int r = 2 * i + 2;
-    
-      if(l >= minSize || l < 0)
-        l = -1;
-      if(r >= minSize || r < 0)
-        r = -1;
-    
-      if (l != -1 && minHeap[l] < minHeap[i])
-        smallest = l;
-      else
-        smallest = i;
-    
-      if (r != -1 && minHeap[r] < minHeap[smallest])
-        smallest = r;
-    
-      if (smallest != i)
-      {
-        swap(&minHeap[i], &minHeap[smallest]);
-    
-        swapInt(&iMinIndices[i], &iMinIndices[smallest]);
-        swapInt(&jMinIndices[i], &jMinIndices[smallest]);
-    
-        MinHeapify(smallest);
-      }
-    }
-    void InsertMinHeap(integer_t newNum, int i, int j){
-       
-      minHeap[minSize] = newNum;
-      iMinIndices[minSize]=i;
-      jMinIndices[minSize]=j;
-      minSize += 1;
-      for (int i = minSize / 2 - 1; i >= 0; i--){
-        
-        MinHeapify(i);
-      }
-       
-    }
-    void MinPop(){
-        // replace first node by last and delete last
-        swap(&minHeap[0], &minHeap[minSize - 1]);
-        swapInt(&iMinIndices[0], &iMinIndices[minSize - 1]);
-        swapInt(&jMinIndices[0], &jMinIndices[minSize - 1]);
-        minSize--;
-    
-        MinHeapify(0);
-    }
-    
-    //MAX
     int iMaxIndices[1<<17];
     int jMaxIndices[1<<17];
     
-    integer_t maxHeap[1<<17];
-    int maxSize = 0;
-    void MaxHeapify(int i){
-    
-      int largest = i;
-      int l = 2 * i + 1;
-      int r = 2 * i + 2;
-      if (l < maxSize && maxHeap[l] > maxHeap[largest])
-        largest = l;
-      if (r < maxSize && maxHeap[r] > maxHeap[largest])
-        largest = r;
-      if (largest != i)
-      {
-        swap(&maxHeap[i], &maxHeap[largest]);
-    
-        swapInt(&iMaxIndices[i], &iMaxIndices[largest]);
-        swapInt(&jMaxIndices[i], &jMaxIndices[largest]);
-    
-        MaxHeapify(largest);
+    // Halll System
+      typedef struct Heap Heap;
+      struct Heap{
+
+        // type = 0 (Heap) || type = 1 (MaxHeap)
+        char type;
+        //
+        integer_t *arr;
+        // Current Size of the Heap
+        integer_t size;
+        // Maximum capacity of the heap
+        integer_t capacity;
+      };
+
+      integer_t parent(integer_t i){
+
+        // Get the index of the parent
+        return (i - 1) / 2;
       }
-    }
-    void InsertMaxHeap(integer_t newNum, int i, int j){
-    
-       
-      maxHeap[maxSize] = newNum;
-      iMaxIndices[maxSize]=i;
-      jMaxIndices[maxSize]=j;
-      maxSize += 1;
-      for (int i = maxSize / 2 - 1; i >= 0; i--){
+
+      integer_t left_child(integer_t i){
+
+        return (2 * i + 1);
+      }
+
+      integer_t right_child(integer_t i){
+
+        return (2 * i + 2);
+      }
+
+      integer_t get_min(Heap *heap){
+
+        // Only for MinHeaps
+        // Return the root node element,
+        // since that's the minimum
+        return heap->arr[0];
+      }
+
+      integer_t get_max(Heap *heap){
+
+        // Only for MaxHeaps
+        // Return the root node element,
+        // since that's the maximum
+        return heap->arr[0];
+      }
+
+      Heap *init_heap(integer_t capacity){
+
+        Heap *heap = (Heap *)calloc(1ull, sizeof(Heap));
+        heap->arr = (integer_t *)calloc(capacity, sizeof(integer_t));
+        heap->capacity = capacity;
+        heap->size = 0;
+        return heap;
+      }
+
+      Heap *insert_heap(Heap *heap, integer_t element, char type, int i, int j){
+
+        if (type == 0){
         
-        MaxHeapify(i);
+            // Inserts an element to the min heap
+            // We first add it to the bottom (last level)
+            // of the tree, and keep swapping with it's parent
+            // if it is lesser than it. We keep doing that until
+            // we reach the root node. So, we will have inserted the
+            // element in it's proper position to preserve the min heap property
+            if (heap->size == heap->capacity)
+            {
+                fprintf(stderr, "Cannot insert %llu. Heap is already full!\n", element);
+                return heap;
+            }
+ 
+            // We can add it. Increase the size and add it to the end
+            heap->size++;
+            heap->arr[heap->size - 1ull] = element;
+            iMinIndices[heap->size]=i;
+            jMinIndices[heap->size]=j;
+
+            // Keep swapping until we reach the root
+            integer_t curr = heap->size - 1ull;
+            // As long as you aren't in the root node, and while the
+            // parent of the last element is greater than it
+            while (curr > 0 && heap->arr[parent(curr)] > heap->arr[curr])
+            {
+                // Swap
+                integer_t temp = heap->arr[parent(curr)];
+                heap->arr[parent(curr)] = heap->arr[curr];
+                heap->arr[curr] = temp;
+                // Update the current index of element
+                curr = parent(curr);
+            }
+            return heap;
+        }
+        else if (type == 1){
+        
+            // Inserts an element to the max heap
+            // We first add it to the bottom (last level)
+            // of the tree, and keep swapping with it's parent
+            // if it is grater than it. We keep doing that until
+            // we reach the root node. So, we will have inserted the
+            // element in it's proper position to preserve the max heap property
+            if (heap->size == heap->capacity)
+            {
+                fprintf(stderr, "Cannot insert %llu. Heap is already full!\n", element);
+                return heap;
+            }
+           
+
+            // We can add it. Increase the size and add it to the end
+            heap->size++;
+            heap->arr[heap->size - 1ull] = element;
+            iMaxIndices[heap->size]=i;
+            jMaxIndices[heap->size]=j;
+
+            // Keep swapping until we reach the root
+            integer_t curr = heap->size - 1ull;
+            // As long as you aren't in the root node, and while the
+            // parent of the last element is lesser than it
+            while (curr > 0 && heap->arr[parent(curr)] < heap->arr[curr])
+            {
+                // Swap
+                integer_t temp = heap->arr[parent(curr)];
+                heap->arr[parent(curr)] = heap->arr[curr];
+                heap->arr[curr] = temp;
+                // Update the current index of element
+                curr = parent(curr);
+            }
+            return heap;
+        }
+        return heap;
       }
-       
-    }
-    void MaxPop(){
-      // replace first node by last and delete last
-      swap(&maxHeap[0], &maxHeap[maxSize - 1]);
-      swapInt(&iMaxIndices[0], &iMaxIndices[maxSize - 1]);
-      swapInt(&jMaxIndices[0], &jMaxIndices[maxSize - 1]);
-      maxSize--;
+
+      Heap *heapify(Heap *heap, integer_t index, char type){
+
+        switch (type)
+        {
+        case 0:
+            // Rearranges the heap as to maintain
+            // the min-heap property
+            if (heap->size <= 1ull)
+                return heap;
+
+            integer_t left = left_child(index);
+            integer_t right = right_child(index);
+
+            // Variable to get the smallest element of the subtree
+            // of an element an index
+            integer_t smallest = index;
+
+            // If the left child is smaller than this element, it is
+            // the smallest
+            if (left < heap->size && heap->arr[left] < heap->arr[index])
+                smallest = left;
+
+            // Similarly for the right, but we are updating the smallest element
+            // so that it will definitely give the least element of the subtree
+            if (right < heap->size && heap->arr[right] < heap->arr[smallest])
+                smallest = right;
+
+            // Now if the current element is not the smallest,
+            // swap with the current element. The min heap property
+            // is now satisfied for this subtree. We now need to
+            // recursively keep doing this until we reach the root node,
+            // the point at which there will be no change!
+            if (smallest != index)
+            {
+                integer_t temp = heap->arr[index];
+                heap->arr[index] = heap->arr[smallest];
+                heap->arr[smallest] = temp;
+
+                swapInt(&iMinIndices[index], &iMinIndices[smallest]);
+                swapInt(&jMinIndices[index], &jMinIndices[smallest]);
+
+                heap = heapify(heap, smallest, 0);
+            }
+
+            return heap;
+            break;
+        case 1:
+            // Rearranges the heap as to maintain
+            // the max-heap property
+            if (heap->size <= 1ull)
+                return heap;
+
+            left = left_child(index);
+            right = right_child(index);
+
+            // Variable to get the greatest element of the subtree
+            // of an element an index
+            integer_t greatest = index;
+
+            // If the left child is greatest than this element, it is
+            // the greatest
+            if (left < heap->size && heap->arr[left] > heap->arr[index])
+                greatest = left;
+
+            // Similarly for the right, but we are updating the greatest element
+            // so that it will definitely give the least element of the subtree
+            if (right < heap->size && heap->arr[right] > heap->arr[greatest])
+                greatest = right;
+
+            // Now if the current element is not the greatest,
+            // swap with the current element. The max heap property
+            // is now satisfied for this subtree. We now need to
+            // recursively keep doing this until we reach the root node,
+            // the point at which there will be no change!
+            if (greatest != index)
+            {
+                integer_t temp = heap->arr[index];
+                heap->arr[index] = heap->arr[greatest];
+                heap->arr[greatest] = temp;
+
+                swapInt(&iMaxIndices[index], &iMaxIndices[greatest]);
+                swapInt(&jMaxIndices[index], &jMaxIndices[greatest]);
+
+                heap = heapify(heap, greatest, 1);
+            }
+
+            return heap;
+            break;
+        }
+        return heap;
+      }     
+
+      Heap *delete_minimum(Heap *heap){
+
+        // Deletes the minimum element, at the root
+        if (!heap || heap->size == 0)
+            return heap;
+
+        integer_t size = heap->size;
+        integer_t last_element = heap->arr[size - 1];
+
+        // Update root value with the last element
+        heap->arr[0] = last_element;
+        swapInt(&iMinIndices[0], &iMinIndices[size - 1]);
+        swapInt(&jMinIndices[0], &jMinIndices[size - 1]);
+
+        // Now remove the last element, by decreasing the size
+        heap->size--;
+        size--;
+
+        // We need to call heapify(), to maintain the min-heap
+        // property
+        heap = heapify(heap, 0, 0);
+        return heap;
+      }
+
+      Heap *delete_maximum(Heap *heap){
+
+        // Deletes the maximum element, at the root
+        if (!heap || heap->size == 0)
+            return heap;
+
+        integer_t size = heap->size;
+        integer_t last_element = heap->arr[size - 1];
+
+        // Update root value with the last element
+        heap->arr[0] = last_element;
+        swapInt(&iMaxIndices[0], &iMaxIndices[size - 1]);
+        swapInt(&jMaxIndices[0], &jMaxIndices[size - 1]);
+
+        // Now remove the last element, by decreasing the size
+        heap->size--;
+        size--;
+
+        // We need to call heapify(), to maintain the max-heap
+        // property
+        heap = heapify(heap, 0, 1);
+        return heap;
+      }
+
+      Heap *delete_element(Heap *heap, integer_t index, char type){
+
+        switch (type)
+        {
+        case 0:
+            // Deletes an element, indexed by index
+            // Ensure that it's lesser than the current root
+            heap->arr[index] = get_min(heap) - 1;
+
+            // Now keep swapping, until we update the tree
+            integer_t curr = index;
+            while (curr > 0 && heap->arr[parent(curr)] > heap->arr[curr])
+            {
+                integer_t temp = heap->arr[parent(curr)];
+                heap->arr[parent(curr)] = heap->arr[curr];
+                heap->arr[curr] = temp;
+                curr = parent(curr);
+            }
+
+            // Now simply delete the minimum element
+            heap = delete_minimum(heap);
+            return heap;
+            break;
+        case 1:
+            // Deletes an element, indexed by index
+            // Ensure that it's lesser than the current root
+            heap->arr[index] = get_min(heap) - 1;
+
+            // Now keep swapping, until we update the tree
+            curr = index;
+            while (curr > 0 && heap->arr[parent(curr)] < heap->arr[curr])
+            {
+                integer_t temp = heap->arr[parent(curr)];
+                heap->arr[parent(curr)] = heap->arr[curr];
+                heap->arr[curr] = temp;
+                curr = parent(curr);
+            }
+
+            // Now simply delete the maximum element
+            heap = delete_maximum(heap);
+            return heap;
+            break;
+            break;
+        }
+        return heap;
+      }
     
-      for (int i = maxSize / 2 - 1; i >= 0; i--)
-      {
-        MaxHeapify(i);
-      }
-    }
+    //
+
+    // Setting Heaps  
+       
+    //
 
     //Algorithm itself
       int SS_T(int n, integer_t *p, integer_t desired_sum){
+        
+        integer_t capacity = 1<<17;
+
+        Heap *MinHeap = (Heap *)calloc(1ull, sizeof(Heap));
+        MinHeap->arr = (integer_t *)calloc(capacity, sizeof(integer_t));
+        MinHeap->capacity = capacity;
+        MinHeap->size = 1;
+                
+        Heap *MaxHeap = (Heap *)calloc(1ull, sizeof(Heap));
+        MaxHeap->arr = (integer_t *)calloc(capacity, sizeof(integer_t));
+        MaxHeap->capacity = capacity;
+        MaxHeap->size = 1; 
+
+
  
         int aSize = (n/2)/2;
         int bSize = ((n/2) - (n/2)/2);
@@ -681,14 +946,13 @@
         faster_calcsubarray(p, B, bSize, aSize);
         faster_calcsubarray(p, C, cSize, aSize + bSize);
         faster_calcsubarray(p, D, dSize, aSize + bSize + cSize);
-        
-           
-        for (int k = 0; k < bCombSize; k++){
-          InsertMinHeap(B[k], k, 0);
+            
+        for (int k = 0; k < aCombSize; k++){
+          insert_heap(MinHeap, A[k], 0, k, 0); 
         }
 
-        for (int k = 0; k < dCombSize; k++){
-          InsertMaxHeap(D[k] + C[cCombSize - 1], k, cCombSize - 1);
+        for (int k = 0; k < (cCombSize); k++){
+          insert_heap(MaxHeap, C[k] + D[dCombSize - 1], 1, k, dCombSize - 1);  
         }
          
         integer_t K = pow(2,n);
@@ -696,47 +960,38 @@
       
         for (integer_t i = 0; i < K; i++){
         
-          max = maxHeap[0];
-          min = minHeap[0];
+          max = MaxHeap->arr[0];
+          min = MinHeap->arr[0];
       
           int iMin = iMinIndices[0]; int jMin = jMinIndices[0];
           int iMax = iMaxIndices[0]; int jMax = jMaxIndices[0];
       
           integer_t sum = min + max;
 
-          printf("%lld + %lld = %lld !!!!!!\n", max, min, sum);
-          
-          printf("----------  Max Heap\n");
-          for(int i=0;i< maxSize;i++){
-            printf("%lld, ", maxHeap[i]);
-          }
-          printf("\n-------\n");
-          printf("----------  Min Heap\n");
-          for(int i=0;i< minSize;i++){
-            printf("%lld, ", minHeap[i]);
-          }
-          printf("\n-------\n");
+          printf("%lld + %lld = %lld \n", max, min, sum);
 
-          printf("\n\n");
+          printf("----------\n");
+          for(int i=0;i<MaxHeap->size;i++){
+            printf("%lld, ", MaxHeap->arr[i]);
+          }
+          printf("\n-------\n");
 
           if (sum == desired_sum)
             return 1;
           else if (sum < desired_sum){
           
-            printf("\n--popado--\n");
- 
-            MinPop();
-            if (jMin + 1 < aCombSize){ 
-              printf("\n--trocado--\n");
- 
-              InsertMinHeap(B[iMin] + A[jMin + 1], iMin, jMin + 1);
+            printf("<\n");
+            delete_minimum(MinHeap);
+            if (jMin + 1 < bCombSize){ 
+              insert_heap(MinHeap, A[iMin] + B[jMin + 1], 0, iMin, jMin + 1);  
             }
           }
           else{
-          
-            MaxPop();
+             
+            printf(">\n");
+            delete_maximum(MaxHeap);
             if (jMax > 0){ 
-              InsertMaxHeap(D[iMax] + C[jMax - 1], iMax, jMax - 1);
+              insert_heap(MaxHeap, C[iMax] + D[jMax - 1], 1, iMax, jMax - 1); 
             }
           }
         }
@@ -774,37 +1029,7 @@ int main(void)
   fprintf(stderr,"  n_problems .. %d\n",n_problems);
   fprintf(stderr,"  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
   
- 
-  /* Setting up file */
-  FILE *fp_1 = NULL;
-  FILE *fp_2 = NULL;
-  FILE *fp_3 = NULL;
-  FILE *fp_4 = NULL;
-  FILE *fp_5 = NULL;
-  FILE *fp_6 = NULL;
-  FILE *fp_7 = NULL;
-  FILE *fp_8 = NULL;
-  FILE *fp_9 = NULL;
-  FILE *fp_10 = NULL;
-  FILE *fp_11 = NULL;
-  FILE *fp_12 = NULL;
-  FILE *fp_13 = NULL;
-  FILE *fp_14 = NULL;
-  fp_1 = fopen("data_1.log", "a");
-  fp_2 = fopen("data_1_max.log", "a");
-  fp_3 = fopen("data_2.log", "a");
-  fp_4 = fopen("data_2_max.log", "a");
-  fp_5 = fopen("data_3.log", "a");
-  fp_6 = fopen("data_3_max.log", "a");
-  fp_7 = fopen("data_4.log", "a");
-  fp_8 = fopen("data_4_max.log", "a");
-  fp_9 = fopen("data_5.log", "a");
-  fp_10 = fopen("data_5_max.log", "a");
-  fp_11 = fopen("data_6.log", "a");
-  fp_12 = fopen("data_6_max.log", "a");
-  fp_13 = fopen("data_7.log", "a");
-  fp_14 = fopen("data_7_max.log", "a");
-    
+  
  
 
   // Loop for n's
@@ -817,28 +1042,15 @@ int main(void)
     printf("n =  %i\n\n",n);
     integer_t *p = all_subset_sum_problems[i].p;     
 
-    // Set up to get the combinations 
-    char comb_bin[n+1];
+   
 
-    // Setting up time variables    
-    double dt_bf_i = 0;  
-    double dt_bf_i_max = 0;  
-    double dt_bf_r = 0;
-    double dt_bf_r_max = 0;
-    double dt_bf_i_s = 0;
-    double dt_bf_i_s_max = 0;
-    double dt_mitm = 0;     
-    double dt_mitm_max = 0;
-    double dt_f_mitm = 0;     
-    double dt_f_mitm_max = 0;
-    double dt_ss = 0;     
-    double dt_ss_max = 0;
+ 
 
     // Loop for sum's
-    for(int j = 0;j < n_sums;j++){
+    for(int j = 0;j < 1;j++){
            
       integer_t sum = all_subset_sum_problems[i].sums[j];
-      double tmp_dt;
+     
 
       /*
       // Iterative
@@ -892,14 +1104,9 @@ int main(void)
         
       */
       // Schroeppel and Shamir technique
-
-      tmp_dt = cpu_time();    
+ 
       int z= SS_T(n, p, sum);
-      tmp_dt = cpu_time() - tmp_dt;
-      if(tmp_dt > dt_ss_max){
-        dt_ss_max = tmp_dt;
-      }
-      dt_ss += tmp_dt;
+       
       
  
       // print results
@@ -909,7 +1116,7 @@ int main(void)
       printf("Brute force recur smart               %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
       printf("Meet in the middle                    %d,  %lld || %i  \n", j ,sum, x);
       printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);*/
-      printf("Schroeppel and Shamir technique       %d,  %lld || %lld \n", j ,sum,z); 
+      printf("Schroeppel and Shamir technique       %d,  %lld || %d \n", j ,sum,z); 
             
     }
 

@@ -656,40 +656,90 @@
         MaxHeapify(i);
       }
     }
+    integer_t *mergerSort(int nSize, integer_t *pArray, integer_t *a){
+      
+      integer_t i1, j1, k1;
+      a[(1 << nSize) - 2] = 0;
+      a[(1 << nSize) - 1] = pArray[0];
+      for (int i = 1; i < nSize; i++)
+      {
+          i1 = (1 << nSize) - (1 << i);
+          j1 = i1;
+          k1 = (1 << nSize) - (2 << i);
+          while (i1 < (1 << nSize) && j1 < (1 << nSize))
+          {
+              if (a[i1] <= a[j1] + pArray[i])
+              {
+                  a[k1] = a[i1];
+                  k1++;
+                  i1++;
+              }
+              else
+              {
+                  a[k1] = a[j1] + pArray[i];
+                  k1++;
+                  j1++;
+              }
+          }
+          while (j1 < (1 << nSize))
+          {
+              a[j1] += pArray[i];
+              j1++;
+          }
+      }
 
+      return a;
+    }
     //Algorithm itself
       int SS_T(int n, integer_t *p, integer_t desired_sum){
  
-        int aSize = (n/2)/2;
-        int bSize = ((n/2) - (n/2)/2);
-        int cSize = (n - n/2)/2;
-        int dSize = ((n - n/2) - (n - n/2)/2);
+        int L1Size;
+        if (n % 4 != 0)
+            L1Size = n / 4 + 1;
+        else
+            L1Size = n / 4;
+        int L2Size = n / 4 + (n % 4) / 2;
+        int R2Size = n / 4 + (n % 4) / 3;
+        int R1Size = n / 4;
+    
+        // Create arrays with correct sizes
+        // This is working correctly
+        integer_t L1[L1Size];
+        integer_t L2[L2Size];
+        integer_t R2[R2Size];
+        integer_t R1[R1Size];
+    
+        for (int i = 0; i < L1Size; i++)
+            L1[i] = p[i];
+        for (int i = L1Size; i < L1Size + L2Size; i++)
+            L2[i - L1Size] = p[i];
+        for (int i = L1Size + L2Size; i < L1Size + L2Size + R2Size; i++)
+            R2[i - (L1Size + L2Size)] = p[i];
+        for (int i = L1Size + L2Size + R2Size; i < L1Size + L2Size + R2Size + R1Size; i++)
+            R1[i - (L1Size + L2Size + R2Size)] = p[i];
+    
+        integer_t fancyL1Size = 1 << L1Size;
+        integer_t fancyL2Size = 1 << L2Size;
+        integer_t fancyR2Size = 1 << R2Size;
+        integer_t fancyR1Size = 1 << R1Size;
+    
+        integer_t fancyL1[fancyL1Size];
+        integer_t fancyL2[fancyL2Size];
+        integer_t fancyR2[fancyR2Size];
+        integer_t fancyR1[fancyR1Size];
+    
+        mergerSort(L1Size, L1, fancyL1);
+        mergerSort(L2Size, L2, fancyL2);
+        mergerSort(R2Size, R2, fancyR2);
+        mergerSort(R1Size, R1, fancyR1);
         
-      
-        int aCombSize = 1<<aSize;
-        int bCombSize = 1<<bSize;
-        int cCombSize = 1<<cSize;
-        int dCombSize = 1<<dSize;
-      
-        // arranja espaço para as somas
-        integer_t *A = malloc(sizeof(integer_t)*aCombSize);
-        integer_t *B = malloc(sizeof(integer_t)*bCombSize);
-        integer_t *C = malloc(sizeof(integer_t)*cCombSize);
-        integer_t *D = malloc(sizeof(integer_t)*dCombSize);
-      
-        faster_calcsubarray(p, A, aSize, 0);
-        faster_calcsubarray(p, B, bSize, aSize);
-        faster_calcsubarray(p, C, cSize, aSize + bSize);
-        faster_calcsubarray(p, D, dSize, aSize + bSize + cSize);
-        
-           
-        for (int k = 0; k < bCombSize; k++){
-          InsertMinHeap(B[k], k, 0);
-        }
 
-        for (int k = 0; k < dCombSize; k++){
-          InsertMaxHeap(D[k] + C[cCombSize - 1], k, cCombSize - 1);
-        }
+           
+        for (int k = 0; k < fancyL1Size; k++)
+          InsertMinHeap(fancyL1[k], k, 0);
+    
+        for (int k = 0; k < fancyR2Size; k++)
+          InsertMaxHeap(fancyR2[k] + fancyR1[fancyR1Size - 1], k, fancyR1Size - 1);
          
         integer_t K = pow(2,n);
         integer_t min, max;
@@ -704,39 +754,25 @@
       
           integer_t sum = min + max;
 
-          printf("%lld + %lld = %lld !!!!!!\n", max, min, sum);
-          
-          printf("----------  Max Heap\n");
-          for(int i=0;i< maxSize;i++){
-            printf("%lld, ", maxHeap[i]);
-          }
-          printf("\n-------\n");
-          printf("----------  Min Heap\n");
-          for(int i=0;i< minSize;i++){
-            printf("%lld, ", minHeap[i]);
-          }
-          printf("\n-------\n");
-
-          printf("\n\n");
+         
 
           if (sum == desired_sum)
             return 1;
           else if (sum < desired_sum){
           
-            printf("\n--popado--\n");
- 
+             
             MinPop();
-            if (jMin + 1 < aCombSize){ 
-              printf("\n--trocado--\n");
+            if (jMin + 1 < fancyL2Size){ 
+              
  
-              InsertMinHeap(B[iMin] + A[jMin + 1], iMin, jMin + 1);
+              InsertMinHeap(fancyL1[iMin] + fancyL2[jMin + 1], iMin, jMin + 1);
             }
           }
           else{
           
             MaxPop();
             if (jMax > 0){ 
-              InsertMaxHeap(D[iMax] + C[jMax - 1], iMax, jMax - 1);
+              InsertMaxHeap(fancyR2[iMax] + fancyR1[jMax - 1], iMax, jMax - 1);
             }
           }
         }
@@ -808,7 +844,7 @@ int main(void)
  
 
   // Loop for n's
-  for(int i = 0;i < 1;i++){
+  for(int i = 0;i < n_problems;i++){
   
     printf("--------------------------- \n");
                 
