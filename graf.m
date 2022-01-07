@@ -68,13 +68,15 @@ f_V1_14 = A_14(:, 2);
 %semilogy(n_V1_7, f_V1_7, n_V1_8, f_V1_8, n_V1_7, f_V1_7./10, n_V1_8, f_V1_8./10);
  
 %semilogy(n_V1_1, f_V1_1, n_V1_2, f_V1_2, n_V1_3, f_V1_3, n_V1_4, f_V1_4, n_V1_5, f_V1_5, n_V1_6, f_V1_6, n_V1_7, f_V1_7, n_V1_8, f_V1_8, n_V1_9, f_V1_9, n_V1_10, f_V1_10, n_V1_11, f_V1_11, n_V1_12, f_V1_12, n_V1_13, f_V1_13, n_V1_14, f_V1_14);
-semilogy(n_V1_1, f_V1_1, n_V1_3, f_V1_3, n_V1_5, f_V1_5, n_V1_7, f_V1_7, n_V1_9, f_V1_9, n_V1_11, f_V1_11, n_V1_13, f_V1_13 );
+%semilogy(n_V1_1, f_V1_1, n_V1_3, f_V1_3, n_V1_5, f_V1_5, n_V1_7, f_V1_7, n_V1_9, f_V1_9, n_V1_11, f_V1_11, n_V1_13, f_V1_13 );
+semilogy(n_V1_1, f_V1_1, n_V1_2, f_V1_2, n_V1_3, f_V1_3, n_V1_4, f_V1_4, n_V1_5, f_V1_5, n_V1_6, f_V1_6, n_V1_7, f_V1_7, n_V1_8, f_V1_8, n_V1_9, f_V1_9, n_V1_10, f_V1_10);
+
 
 %semilogy( n_V1_7, f_V1_7, n_V1_8, f_V1_8,n_V1_9, f_V1_9, n_V1_10, f_V1_10, n_V1_11, f_V1_11, n_V1_12, f_V1_12, n_V1_13, f_V1_13, n_V1_14, f_V1_14);
-
+legend('Iterative', 'worst Iterative','Recursive','worst Recursive','Recursive Smart','worst Recursive Smart','Meet in the meedle','worst Meet in the meedle','Fast Meet in the meedle','worst Fast Meet in the meedle');
 %legend('Meet in the meedle','worst Meet in the meedle','Fast Meet in the meedle','worst Fast Meet in the meedle','Schroeppel and Shamir technique','worst Schroeppel and Shamir technique','Schroeppel and Shamir technique Teles','worst Schroeppel and Shamir technique Teles');
 %legend('Iterative', 'worst Iterative','Recursive','worst Recursive','Recursive Smart','worst Recursive Smart','Meet in the meedle','worst Meet in the meedle','Fast Meet in the meedle','worst Fast Meet in the meedle','Schroeppel and Shamir technique','worst Schroeppel and Shamir technique','Schroeppel and Shamir technique Teles','worst Schroeppel and Shamir technique Teles');
-legend('Iterative',  'Recursive', 'Recursive Smart', 'Meet in the meedle' ,'Fast Meet in the meedle' ,'Schroeppel and Shamir technique', 'Schroeppel and Shamir technique Teles' );
+%legend('Iterative',  'Recursive', 'Recursive Smart', 'Meet in the meedle' ,'Fast Meet in the meedle' ,'Schroeppel and Shamir technique', 'Schroeppel and Shamir technique Teles' );
 grid on
 
 
