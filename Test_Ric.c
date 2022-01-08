@@ -10,7 +10,7 @@
 # error "This code must must be compiled in c99 mode or later (-std=c99)" // to handle the unsigned long long data type
 #endif
 #ifndef STUDENT_H_FILE
-# define STUDENT_H_FILE "000000.h"
+# define STUDENT_H_FILE "000000_extra.h"
 #endif
 
 
@@ -58,80 +58,12 @@
   //
 
   //Heap Sort
-    void heapify(integer_t arr[], int n, int i) {
-        // Find largest among root, left child and right child
-        int largest = i;
-        int left = 2 * i + 1;
-        int right = 2 * i + 2;
-      
-        if (left < n && arr[left] > arr[largest])
-          largest = left;
-      
-        if (right < n && arr[right] > arr[largest])
-          largest = right;
-      
-        // Swap and continue heapifying if root is not largest
-        if (largest != i) {
-          swap(&arr[i], &arr[largest]);
-          heapify(arr, n, largest);
-        }
-    }
-      
-
-    void heapSort(integer_t arr[], int n) {
-        // Build max heap
-        for (int i = n / 2 - 1; i >= 0; i--)
-          heapify(arr, n, i);
-      
-        // Heap sort
-        for (int i = n - 1; i >= 0; i--) {
-          swap(&arr[0], &arr[i]);
-      
-          // Heapify root element to get highest element at root again
-          heapify(arr, i, 0);
-        }
-    }
-
-    void heapify2d(integer_t (*arr)[2], int n, int i) {
-        // Find largest among root, left child and right child
-        int largest = i;
-        int left = 2 * i + 1;
-        int right = 2 * i + 2;
-      
-        if (left < n && arr[left][0] > arr[largest][0])
-          largest = left;
-      
-        if (right < n && arr[right][0] > arr[largest][0])
-          largest = right;
-      
-        // Swap and continue heapifying if root is not largest
-        if (largest != i) {
-          swap(&arr[i][0], &arr[largest][0]);
-          swap(&arr[i][1], &arr[largest][1]);
-          heapify2d(arr, n, largest);
-        }
-    }
-      
-
-    void heapSort2d(integer_t (*arr)[2], int n) {
-        // Build max heap
-        for (int i = n / 2 - 1; i >= 0; i--)
-          heapify2d(arr, n, i);
-      
-        // Heap sort
-        for (int i = n - 1; i >= 0; i--) {
-          swap(&arr[0][0], &arr[i][0]);
-          swap(&arr[0][1], &arr[i][1]);
-      
-          // Heapify root element to get highest element at root again
-          heapify2d(arr, i, 0);
-        }
-    }
+     
   //
 // 
 
 //Algorithms
-
+/*
   // Brute Force Iterative Algorithm 
     int Bf_Iter(int n, integer_t *p, integer_t desired_sum){
 
@@ -243,7 +175,7 @@
         heapSort(X, size_X);
         heapSort(Y, size_Y);
         
-        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
+         
         int i= 0;
         int j= size_Y - 1;
         while(i< size_X && j >= 0){
@@ -315,7 +247,7 @@
         faster_calcsubarray(p, X, n/2, 0);
         faster_calcsubarray(p, Y, n-n/2, n/2); 
           
-        /* Go through the array X from start to end, and through Y form end to start, testing if we get the desired sum from putting them together */
+         
         int i= 0;
         int j= size_Y - 1;
         while(i< size_X && j >= 0){
@@ -338,7 +270,7 @@
       }
     //
   //
-
+  
   // Schroeppel and Shamir technique
 
     //Create Array(x[][2]) composed by all the possible sums of a given Array(a[]) and the cominations
@@ -540,122 +472,168 @@
     //
 
   //
-
+  */
   // Schroeppel and Shamir technique by Teles
      
-    void swapInt(int *a, int *b) {
-      integer_t temp = *a;
-      *a = *b;
-      *b = temp;
-    } 
+    integer_t currentMinHeapSize = 0;
+    integer_t currentMaxHeapSize = 0;
+    integer_t minHeap[1 << 23];
+    integer_t maxHeap[1 << 23];
+    integer_t indicesMin[1 << 23][2];
+    integer_t indicesMax[1 << 23][2];
+    integer_t iMin, iMax, jMin, jMax;
+    // This works, it swaps two elements of an array
+    void swapMin(integer_t i, integer_t j){
+    
+        integer_t temp = minHeap[i];
+        minHeap[i] = minHeap[j];
+        minHeap[j] = temp;
+    
+        temp = indicesMin[i][0];
+        indicesMin[i][0] = indicesMin[j][0];
+        indicesMin[j][0] = temp;
+    
+        temp = indicesMin[i][1];
+        indicesMin[i][1] = indicesMin[j][1];
+        indicesMin[j][1] = temp;
+    }
+    // This works, it swaps two elements of an array
+    void swapMax(integer_t i, integer_t j){
+    
+        integer_t temp = maxHeap[i];
+        maxHeap[i] = maxHeap[j];
+        maxHeap[j] = temp;
+    
+        temp = indicesMax[i][0];
+        indicesMax[i][0] = indicesMax[j][0];
+        indicesMax[j][0] = temp;
+    
+        temp = indicesMax[i][1];
+        indicesMax[i][1] = indicesMax[j][1];
+        indicesMax[j][1] = temp;
+    }
+     
+    // Returns left child node index
+    integer_t leftChild(integer_t i){
+    
+        return i * 2 + 1;
+    }
+    // Returns right child node index
+    integer_t rightChild(integer_t i){
+    
+        return i * 2 + 2;
+    }
+     
+     
+    void heapify(integer_t i){
+    
+        // If this node isn't a leaf and is greater than any of its children
+        if (!(i + 1 > (currentMinHeapSize / 2) && i < currentMinHeapSize))
+        {
+            if (minHeap[i] > minHeap[i * 2 + 1] || minHeap[i] > minHeap[i * 2 + 2])
+            {
+                // Swap with the left child and heapify him
+                if (minHeap[i * 2 + 1] < minHeap[i * 2 + 2])
+                {
+                    swapMin(i, i * 2 + 1);
+                    heapify(i * 2 + 1);
+                }
+                else
+                {
+                    swapMin(i, i * 2 + 2);
+                    heapify(i * 2 + 2);
+                }
+            }
+        }
+    }
 
-    //MIN
-    int iMinIndices[1<<17];
-    int jMinIndices[1<<17];
+    void insertHeap(integer_t number, integer_t i, integer_t j){
     
-    integer_t minHeap[1<<17];
-    int minSize = 0;
-    void MinHeapify(int i){
+        minHeap[currentMinHeapSize] = number;
+        indicesMin[currentMinHeapSize][0] = i;
+        indicesMin[currentMinHeapSize][1] = j;
+        // Index of where we are at
+        integer_t index = currentMinHeapSize;
+        currentMinHeapSize++;
     
-      int smallest = i;
-      int l = 2 * i + 1;
-      int r = 2 * i + 2;
-    
-      if(l >= minSize || l < 0)
-        l = -1;
-      if(r >= minSize || r < 0)
-        r = -1;
-    
-      if (l != -1 && minHeap[l] < minHeap[i])
-        smallest = l;
-      else
-        smallest = i;
-    
-      if (r != -1 && minHeap[r] < minHeap[smallest])
-        smallest = r;
-    
-      if (smallest != i)
-      {
-        swap(&minHeap[i], &minHeap[smallest]);
-    
-        swapInt(&iMinIndices[i], &iMinIndices[smallest]);
-        swapInt(&jMinIndices[i], &jMinIndices[smallest]);
-    
-        MinHeapify(smallest);
-      }
+        // If the child is bigger than the parent, swap, and then go to the parent's index
+        while (minHeap[index] < minHeap[(index - 1) / 2])
+        {
+            swapMin(index, (index - 1) / 2);
+            index = (index - 1) / 2;
+        }
     }
-    void InsertMinHeap(integer_t newNum, int i, int j){
-       
-      minHeap[minSize] = newNum;
-      iMinIndices[minSize]=i;
-      jMinIndices[minSize]=j;
-      minSize += 1;
-      for (int i = minSize / 2 - 1; i >= 0; i--){
-        
-        MinHeapify(i);
-      }
-       
+
+    integer_t pop(){
+    
+        integer_t pop = minHeap[0];
+        minHeap[0] = minHeap[currentMinHeapSize - 1];
+        indicesMin[0][0] = indicesMin[currentMinHeapSize - 1][0];
+        indicesMin[0][1] = indicesMin[currentMinHeapSize - 1][1];
+        //printf("What happens at pop() when currentSize = %d?\n", *currentSize);
+        //printArraysMultidimensional(*currentSize, indicesArray);
+    
+        //printArraysInt(*currentSize, heap);
+    
+        currentMinHeapSize--;
+        heapify(0);
+    
+        return pop;
     }
-    void MinPop(){
-        // replace first node by last and delete last
-        swap(&minHeap[0], &minHeap[minSize - 1]);
-        swapInt(&iMinIndices[0], &iMinIndices[minSize - 1]);
-        swapInt(&jMinIndices[0], &jMinIndices[minSize - 1]);
-        minSize--;
+
+    void maxHeapify(integer_t i){
     
-        MinHeapify(0);
+        // If this node isn't a leaf and is smaller than any of its children
+        if (!(i + 1 > (currentMaxHeapSize / 2) && i < currentMaxHeapSize))
+        {
+            if (maxHeap[i] < maxHeap[i * 2 + 1] || maxHeap[i] < maxHeap[i * 2 + 2])
+            {
+                // Swap with the left child and heapify him
+                if (maxHeap[i * 2 + 1] > maxHeap[i * 2 + 2])
+                {
+                    swapMax(i, i * 2 + 1);
+                    maxHeapify(i * 2 + 1);
+                }
+                else
+                {
+                    swapMax(i, i * 2 + 2);
+                    maxHeapify(i * 2 + 2);
+                }
+            }
+        }
     }
+
+    integer_t maxPop(){
     
-    //MAX
-    int iMaxIndices[1<<17];
-    int jMaxIndices[1<<17];
+        integer_t pop = maxHeap[0];
+        maxHeap[0] = maxHeap[currentMaxHeapSize - 1];
+        indicesMax[0][0] = indicesMax[currentMaxHeapSize - 1][0];
+        indicesMax[0][1] = indicesMax[currentMaxHeapSize - 1][1];
     
-    integer_t maxHeap[1<<17];
-    int maxSize = 0;
-    void MaxHeapify(int i){
+        currentMaxHeapSize--;
+        maxHeapify(0);
     
-      int largest = i;
-      int l = 2 * i + 1;
-      int r = 2 * i + 2;
-      if (l < maxSize && maxHeap[l] > maxHeap[largest])
-        largest = l;
-      if (r < maxSize && maxHeap[r] > maxHeap[largest])
-        largest = r;
-      if (largest != i)
-      {
-        swap(&maxHeap[i], &maxHeap[largest]);
-    
-        swapInt(&iMaxIndices[i], &iMaxIndices[largest]);
-        swapInt(&jMaxIndices[i], &jMaxIndices[largest]);
-    
-        MaxHeapify(largest);
-      }
+        return pop;
     }
-    void InsertMaxHeap(integer_t newNum, int i, int j){
+     
+    void insertMaxHeap(integer_t number, integer_t i, integer_t j){
     
-       
-      maxHeap[maxSize] = newNum;
-      iMaxIndices[maxSize]=i;
-      jMaxIndices[maxSize]=j;
-      maxSize += 1;
-      for (int i = maxSize / 2 - 1; i >= 0; i--){
-        
-        MaxHeapify(i);
-      }
-       
-    }
-    void MaxPop(){
-      // replace first node by last and delete last
-      swap(&maxHeap[0], &maxHeap[maxSize - 1]);
-      swapInt(&iMaxIndices[0], &iMaxIndices[maxSize - 1]);
-      swapInt(&jMaxIndices[0], &jMaxIndices[maxSize - 1]);
-      maxSize--;
+        maxHeap[currentMaxHeapSize] = number;
+        indicesMax[currentMaxHeapSize][0] = i;
+        indicesMax[currentMaxHeapSize][1] = j;
+        // Index of where we are at
+        integer_t index = currentMaxHeapSize;
+        currentMaxHeapSize++;
     
-      for (int i = maxSize / 2 - 1; i >= 0; i--)
-      {
-        MaxHeapify(i);
-      }
+        // If the child is bigger than the parent, swap, and then go to the parent's index
+        while (maxHeap[index] > maxHeap[(index - 1) / 2] && index > 0)
+        {
+            //printf("Inside while loop\n");
+            swapMax(index, (index - 1) / 2);
+            index = (index - 1) / 2;
+        }
     }
+     
     integer_t *mergerSort(int nSize, integer_t *pArray, integer_t *a){
       
       integer_t i1, j1, k1;
@@ -690,6 +668,7 @@
 
       return a;
     }
+    
     //Algorithm itself
       int SS_T(int n, integer_t *p, integer_t desired_sum){
  
@@ -732,51 +711,47 @@
         mergerSort(L2Size, L2, fancyL2);
         mergerSort(R2Size, R2, fancyR2);
         mergerSort(R1Size, R1, fancyR1);
-        
+
+         
 
            
         for (int k = 0; k < fancyL1Size; k++)
-          InsertMinHeap(fancyL1[k], k, 0);
-    
+          insertHeap(fancyL1[k] /* + fancyL2[0] which is always 0*/, k, 0);
+        // Do the same, but j = fancyR1Size-1
         for (int k = 0; k < fancyR2Size; k++)
-          InsertMaxHeap(fancyR2[k] + fancyR1[fancyR1Size - 1], k, fancyR1Size - 1);
-         
+          insertMaxHeap(fancyR2[k] + fancyR1[fancyR1Size - 1], k, fancyR1Size - 1);
+    
         integer_t K = pow(2,n);
-        integer_t min, max;
+        integer_t minTop, maxTop;
+ 
+        for (integer_t count = 0; count < K; count++){
       
-        for (integer_t i = 0; i < K; i++){
-        
-          max = maxHeap[0];
-          min = minHeap[0];
-      
-          int iMin = iMinIndices[0]; int jMin = jMinIndices[0];
-          int iMax = iMaxIndices[0]; int jMax = jMaxIndices[0];
-      
-          integer_t sum = min + max;
-
-         
-
-          if (sum == desired_sum)
+          minTop = minHeap[0];
+          maxTop = maxHeap[0];
+  
+          iMin = indicesMin[0][0], jMin = indicesMin[0][1];
+          iMax = indicesMax[0][0], jMax = indicesMax[0][1];
+  
+          integer_t sum = minTop + maxTop;
+  
+          if (sum == desired_sum){
+             
             return 1;
+          }
           else if (sum < desired_sum){
           
-             
-            MinPop();
-            if (jMin + 1 < fancyL2Size){ 
-              
- 
-              InsertMinHeap(fancyL1[iMin] + fancyL2[jMin + 1], iMin, jMin + 1);
-            }
+            pop();
+            if (jMin + 1 < fancyL2Size)
+                insertHeap(fancyL1[iMin] + fancyL2[jMin + 1], iMin, jMin + 1);
           }
-          else{
-          
-            MaxPop();
-            if (jMax > 0){ 
-              InsertMaxHeap(fancyR2[iMax] + fancyR1[jMax - 1], iMax, jMax - 1);
-            }
+          else
+          {
+            maxPop();
+            if (jMax > 0)
+              insertMaxHeap(fancyR2[iMax] + fancyR1[jMax - 1], iMax, jMax - 1);
           }
         }
-      
+        
         return 0;
       }
     //
@@ -844,7 +819,7 @@ int main(void)
  
 
   // Loop for n's
-  for(int i = 0;i < n_problems;i++){
+  for(int i = 0;i <n_problems;i++){
   
     printf("--------------------------- \n");
                 
@@ -945,7 +920,7 @@ int main(void)
       printf("Brute force recur smart               %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
       printf("Meet in the middle                    %d,  %lld || %i  \n", j ,sum, x);
       printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);*/
-      printf("Schroeppel and Shamir technique       %d,  %lld || %lld \n", j ,sum,z); 
+      printf("Schroeppel and Shamir technique       %d|| %d \n", j, z); 
             
     }
 

@@ -10,7 +10,7 @@
 # error "This code must must be compiled in c99 mode or later (-std=c99)" // to handle the unsigned long long data type
 #endif
 #ifndef STUDENT_H_FILE
-# define STUDENT_H_FILE "000000.h"
+# define STUDENT_H_FILE "000000_extra.h"
 #endif
 
 
@@ -340,456 +340,228 @@
   //
 
   // Schroeppel and Shamir technique
-
-    //Create Array(x[][2]) composed by all the possible sums of a given Array(a[]) and the cominations
-      void calcsubarray2d(integer_t a[], integer_t (*x)[2], int n, int c){
-
-        integer_t s;
-        
-        for (int i=0; i<(1<<n); i++)
-        {
-          s = 0;
-          integer_t cmb = 0;
-          
-          for (int j=0; j<n; j++){
-            if (i & (1<<j)){
-              s += a[j+c];
-              cmb += pow(2, j+c);
-            }    
-          }
-
-          if(s >= 0){
-            x[i][0] = s;
-            x[i][1] = cmb;  
-          }
-        }
-      } 
-    //
-
-    // Heapify for Min Heap
-      void min_heapify(int (*arr)[2], int n, integer_t (*A)[2] , integer_t (*B)[2] ,int i){
-
-        int smallest = i; // Initialize largest as root
-        int l = 2 * i + 1; // down left = 2*i + 1
-        int r = 2 * i + 2; // down right = 2*i + 2
-    
-        // If left child is larger than root
-        if (l < n && A[arr[l][0]][0] + B[arr[l][1]][0]  <= A[arr[smallest][0]][0] + B[arr[smallest][1]][0])
-          smallest = l;
-    
-        // If right child is larger than largest so far
-        if (r < n && A[arr[r][0]][0] + B[arr[r][1]][0]  <= A[arr[smallest][0]][0] + B[arr[smallest][1]][0])
-          smallest = r;
-    
-        // If largest is not root
-        if (smallest != i) {
-
-          int temp_array_0 = arr[smallest][0]; int temp_array_1 = arr[smallest][1];
-          arr[smallest][0] =arr[i][0];
-          arr[smallest][1] =arr[i][1];
-          arr[i][0] = temp_array_0;
-          arr[i][1] = temp_array_1;
-
-          // Recursively heapify the affected sub-tree
-          min_heapify(arr, n, A, B ,smallest);
-        }
-      }
-    //  
-    
-    // Create Min Heap
-      void generateMinHeap(int (*minheap)[2] , integer_t (*A)[2],integer_t (*B)[2],int size_a,int size_b){
-
-        // Generate tree from array indexes
-        int heap_iter = 0;
-        for(int i = 0; i < size_a; i++){
-          for (int j = 0; j < size_b; j++){
-            minheap[heap_iter][0] = i;
-            minheap[heap_iter][1] = j;
-            heap_iter+=1;
-          }
-        }
-        
-        // Perform reverse level order traversal
-        // from last non-leaf node and heapify
-        int startIdx = ( (size_a*size_b) / 2) - 1;
-
-        // each node
-        for (int i = startIdx; i >= 0; i--) {
-          min_heapify(minheap, size_a*size_b , A, B ,i);
-        }
-
-      }
-    //
-
-    // Heapify for Max Heap
-      void max_heapify(int (*arr)[2], int n, integer_t (*A)[2] , integer_t (*B)[2] ,int i){
-
-        int largest = i; // Initialize largest as root
-        int l = 2 * i + 1; // down left = 2*i + 1
-        int r = 2 * i + 2; // down right = 2*i + 2
-  
-        // If left child is larger than root
-        if (l < n && A[arr[l][0]][0] + B[arr[l][1]][0]  >= A[arr[largest][0]][0] + B[arr[largest][1]][0])
-          largest = l;
-  
-        // If right child is larger than largest so far
-        if (r < n && A[arr[r][0]][0] + B[arr[r][1]][0]  >= A[arr[largest][0]][0] + B[arr[largest][1]][0])
-          largest = r;
-  
-        // If largest is not root
-        if (largest != i) {
-          int temp_array_0 = arr[largest][0]; int temp_array_1 = arr[largest][1];
-          arr[largest][0] =arr[i][0];
-          arr[largest][1] =arr[i][1];
-          arr[i][0] = temp_array_0;
-          arr[i][1] = temp_array_1;
-
-          // Recursively heapify the affected sub-tree
-          max_heapify(arr, n, A, B ,largest);
-        }
-      }
-    //
-
-    // Create Max Heap
-      void generateMaxHeap(int (*maxheap)[2] , integer_t (*C)[2],integer_t (*D)[2],int size_c,int size_d){
-
-        // Generate tree from array indexes
-        int heap_iter = 0;
-        for(int i = 0; i < size_c; i++){
-          for (int j = 0; j < size_d; j++){
-            maxheap[heap_iter][0] = i;
-            maxheap[heap_iter][1] = j;
-            heap_iter+=1;
-          }
-        }
-
-        // Perform reverce level order traversal
-        // from last non-leaf node and heapify
-        int startIdx = ( (size_c*size_d) / 2) - 1;
-        // each node
-        for (int i = startIdx; i >= 0; i--) {
-          max_heapify(maxheap, size_c*size_d , C, D ,i);
-        }
-      }
-    //
-
-    //Algorithm itself
-      integer_t SS(int n, integer_t *p, integer_t desired_sum){
-
-        // pega o tamanho
-        int a = (n/2)/2;
-        int b = ((n/2) - (n/2)/2);
-        int c = (n - n/2)/2;
-        int d = ((n - n/2) - (n - n/2)/2);
-
-        // arranja espaço para as somas
-        integer_t (*A)[2] = malloc(sizeof(integer_t)*(1<<a) * 2);
-        integer_t (*B)[2] = malloc(sizeof(integer_t)*(1<<b) * 2);
-        integer_t (*C)[2] = malloc(sizeof(integer_t)*(1<<c) * 2);
-        integer_t (*D)[2] = malloc(sizeof(integer_t)*(1<<d) * 2);
-
-        calcsubarray2d(p, A, a, 0);
-        calcsubarray2d(p, B, b, a);
-        calcsubarray2d(p, C, c, a + b);
-        calcsubarray2d(p, D, d, a + b + c);
-
-        heapSort2d(A,(1<<a));
-        heapSort2d(B,(1<<b));
-        heapSort2d(C,(1<<c));
-        heapSort2d(D,(1<<d));
-
-        int (*minheap)[2] = malloc(sizeof(int)* 2 * ((1<<a) * (1<<b)));
-
-        generateMinHeap(minheap, A, B,(1<<a),(1<<b));
-
-        int (*maxheap)[2] = malloc(sizeof(int)* 2 * ((1<<c) * (1<<d)));
-
-        generateMaxHeap(maxheap, C, D,(1<<c),(1<<d));
-
-        integer_t soma;
-        integer_t soma2;
-        for (int i = 0;i<((1<<c) * (1<<d));i++){
-          if (C[maxheap[i][0]][0] + D[maxheap[i][1]][0] > desired_sum){
-            continue;
-          }
-
-          for (int j = 0;j<((1<<a) * (1<<b));j++){
-            soma = A[minheap[j][0]][0] + B[minheap[j][1]][0] + C[maxheap[i][0]][0] + D[maxheap[i][1]][0]; 
-            soma2 = A[minheap[j][0]][1] + B[minheap[j][1]][1] + C[maxheap[i][0]][1] + D[maxheap[i][1]][1]; 
-            if (soma == desired_sum){
-              free(A);
-              free(B);
-              free(C);
-              free(D);
-              free(minheap);
-              free(maxheap); 
-              return soma2;
-            }
-          }
-        }
-          
-           
-        free(A);
-        free(B);
-        free(C);
-        free(D);
-        free(minheap);
-        free(maxheap);
-        return 0;
-      }
-    //
-
-  //
-
-  // Schroeppel and Shamir technique by Teles
      
-    
+    //Heap Structure
      
-    integer_t iMaxIndices[1<<23];
-    integer_t jMaxIndices[1<<23];
-    
-    integer_t iMinIndices[1<<23];
-    integer_t jMinIndices[1<<23];
-    
-
-    integer_t minHeap[1<<23];
-    integer_t minSize = 0;
-    
-    integer_t maxHeap[1<<23];
-    integer_t maxSize = 0;
-
-    integer_t iMin, iMax, jMin, jMax;
-
-
-
-    void MinHeapify(integer_t i){
-     
-      int l = 2 * i + 1;
-      int r = 2 * i + 2;
-     
-      // If this node isn't a leaf and is smaller than any of its children
-        if (!(i + 1 > (minSize / 2) && i < minSize))
-        {
-            if (minHeap[i] > minHeap[l] || minHeap[i] > minHeap[r])
-            {
-                // Swap with the left child and heapify him
-                if (minHeap[l] < minHeap[r])
-                {
-                    swap(&minHeap[i], &minHeap[l]);
-    
-                    swap(&iMinIndices[i], &iMinIndices[l]);
-                    swap(&jMinIndices[i], &jMinIndices[l]);
-                
-                    MinHeapify(l);
-                }
-                else
-                {
-                    swap(&minHeap[i], &minHeap[r]);
-    
-                    swap(&iMinIndices[i], &iMinIndices[r]);
-                    swap(&jMinIndices[i], &jMinIndices[r]);
-                
-                    MinHeapify(r);
-                }
-            }
-        }
-    }
-    void InsertMinHeap(integer_t newNum, integer_t i, integer_t j){
-       
-      minHeap[minSize] = newNum;
-      iMinIndices[minSize]=i;
-      jMinIndices[minSize]=j;
-      integer_t pos = minSize;
-      minSize++;
-       
-      while (minHeap[pos] < minHeap[(pos - 1) / 2]){
-        
-        swap(&minHeap[pos], &minHeap[(pos - 1) / 2]);
-        swap(&iMinIndices[pos], &iMinIndices[(pos - 1) / 2]);
-        swap(&jMinIndices[pos], &jMinIndices[(pos - 1) / 2]);
-        pos = (pos - 1) / 2;
-      }
-
-       
-    }
-    void MinPop(){
-        // replace first node by last and delete last
-        minHeap[0] = minHeap[minSize - 1];
-        iMinIndices[0] = iMinIndices[minSize - 1];
-        jMinIndices[0] = jMinIndices[minSize - 1];
-        minSize--;
-    
-        MinHeapify(0);
-    }
-    
-    
-    void MaxHeapify(integer_t i){
-     
-      integer_t l = 2 * i + 1;
-      integer_t r = 2 * i + 2;
-      // If this node isn't a leaf and is smaller than any of its children
-        if (!(i + 1 > (maxSize / 2) && i < maxSize))
-        {
-            if (maxHeap[i] < maxHeap[l] || maxHeap[i] < maxHeap[r])
-            {
-                // Swap with the left child and heapify him
-                if (maxHeap[l] > maxHeap[r])
-                {
-                    swap(&maxHeap[i], &maxHeap[l]);
-    
-                    swap(&iMaxIndices[i], &iMaxIndices[l]);
-                    swap(&jMaxIndices[i], &jMaxIndices[l]);
-                
-                    MaxHeapify(l);
-                }
-                else
-                {
-                    swap(&maxHeap[i], &maxHeap[r]);
-    
-                    swap(&iMaxIndices[i], &iMaxIndices[r]);
-                    swap(&jMaxIndices[i], &jMaxIndices[r]);
-                
-                    MaxHeapify(r);
-                }
-            }
-        }
-       
-    }
-    void InsertMaxHeap(integer_t newNum, integer_t i, integer_t j){
-    
-       
-      maxHeap[maxSize] = newNum;
-      iMaxIndices[maxSize]=i;
-      jMaxIndices[maxSize]=j;
-      integer_t pos = maxSize;
-      maxSize++;
-      while (maxHeap[pos] > maxHeap[(pos - 1) / 2] && pos> 0){
-        
-        swap(&maxHeap[pos], &maxHeap[(i - 1) / 2]);
-        swap(&iMaxIndices[pos], &iMaxIndices[(pos - 1) / 2]);
-        swap(&jMaxIndices[pos], &jMaxIndices[(pos - 1) / 2]);
-        pos = (pos - 1) / 2;
-      }
-       
-    }
-    void MaxPop(){
-      // replace first node by last and delete last
-      maxHeap[0] = maxHeap[maxSize - 1];
-      iMaxIndices[0] = iMaxIndices[maxSize - 1];
-      jMaxIndices[0] = jMaxIndices[maxSize - 1];
-      maxSize--;
-    
+      integer_t Idx_Min_Heap[1 << 23][2];
+      integer_t Idx_Max_Heap[1 << 23][2];
       
-      MaxHeapify(0);
+      integer_t Min_Heap[1<<23];
+      integer_t MinH_Size = 0;
       
-    }
+      integer_t Max_Heap[1<<23];
+      integer_t MaxH_Size = 0;
+
+      integer_t MinH_i, MaxH_i, MinH_j, MaxH_j;
+    
+      //Quick Swap
+        void Heap_Swap(integer_t i, integer_t j, int type){
+          integer_t tmp = 0;
+          switch(type){
+            case 0:
+              tmp = Min_Heap[i];
+              Min_Heap[i] = Min_Heap[j];
+              Min_Heap[j] = tmp;
+          
+              tmp = Idx_Min_Heap[i][0];
+              Idx_Min_Heap[i][0] = Idx_Min_Heap[j][0];
+              Idx_Min_Heap[j][0] = tmp;
+          
+              tmp = Idx_Min_Heap[i][1];
+              Idx_Min_Heap[i][1] = Idx_Min_Heap[j][1];
+              Idx_Min_Heap[j][1] = tmp;
+            break;
+              
+            case 1:
+              tmp = Max_Heap[i];
+              Max_Heap[i] = Max_Heap[j];
+              Max_Heap[j] = tmp;
+            
+              tmp = Idx_Max_Heap[i][0];
+              Idx_Max_Heap[i][0] = Idx_Max_Heap[j][0];
+              Idx_Max_Heap[j][0] = tmp;
+            
+              tmp = Idx_Max_Heap[i][1];
+              Idx_Max_Heap[i][1] = Idx_Max_Heap[j][1];
+              Idx_Max_Heap[j][1] = tmp;
+            break; 
+          }
+        }
+      //
+       
+      // Min Heap  
+        void MinH_Heapify(integer_t i){
+      
+          int l = 2 * i + 1;
+          int r = 2 * i + 2;
+      
+          if (!(i + 1 > (MinH_Size / 2) && i < MinH_Size)){
+          
+            if (Min_Heap[i] > Min_Heap[l] || Min_Heap[i] > Min_Heap[r]){
+              
+              if (Min_Heap[l] < Min_Heap[r]){
+                  
+                Heap_Swap(i, l, 0);
+                MinH_Heapify(l);
+              }
+              else{
+                  
+                Heap_Swap(i, r, 0);                
+                MinH_Heapify(r);
+              }
+            }
+          }
+        }
+
+        void MinH_Insert(integer_t newNum, integer_t i, integer_t j){
+        
+          Min_Heap[MinH_Size] = newNum;
+          Idx_Min_Heap[MinH_Size][0] = i;
+          Idx_Min_Heap[MinH_Size][1] = j;
+          integer_t pos = MinH_Size;
+          MinH_Size++;
+          
+          while (Min_Heap[pos] < Min_Heap[(pos - 1) / 2]){
+          
+            Heap_Swap(pos, (pos - 1) / 2, 0);
+            pos = (pos - 1) / 2;
+          }   
+        }
+
+        void MinH_Pop(){
+          // replace first node by last and delete last
+          Min_Heap[0] = Min_Heap[MinH_Size - 1];
+          Idx_Min_Heap[0][0] = Idx_Min_Heap[MinH_Size - 1][0];
+          Idx_Min_Heap[0][1] = Idx_Min_Heap[MinH_Size - 1][1];
+          MinH_Size--;
+      
+          MinH_Heapify(0);
+        }
+      //
+
+      // Max Heap
+        void MaxH_Heapify(integer_t i){
+      
+          integer_t l = 2 * i + 1;
+          integer_t r = 2 * i + 2;
+        
+          if (!(i + 1 > (MaxH_Size / 2) && i < MaxH_Size)){
+          
+            if (Max_Heap[i] < Max_Heap[l] || Max_Heap[i] < Max_Heap[r]){
+              
+              if (Max_Heap[l] > Max_Heap[r]){
+                  
+                  Heap_Swap(i, l, 1);
+                  MaxH_Heapify(l);
+                }
+              else{
+                  
+                Heap_Swap(i, r, 1);
+                MaxH_Heapify(r);
+              }
+            }
+          }   
+        }
+
+        void MaxH_Insert(integer_t newNum, integer_t i, integer_t j){
+        
+          Max_Heap[MaxH_Size] = newNum;
+          Idx_Max_Heap[MaxH_Size][0] = i;
+          Idx_Max_Heap[MaxH_Size][1] = j;
+          integer_t pos = MaxH_Size;
+          MaxH_Size++;
+          while (Max_Heap[pos] > Max_Heap[(pos - 1) / 2] && pos> 0){
+            
+            Heap_Swap(pos, (pos - 1) / 2, 1);
+            pos = (pos - 1) / 2;
+          }
+        }
+
+        void MaxH_Pop(){
+          // replace first node by last and delete last
+          Max_Heap[0] = Max_Heap[MaxH_Size - 1];
+          Idx_Max_Heap[0][0] = Idx_Max_Heap[MaxH_Size - 1][0];
+          Idx_Max_Heap[0][1] = Idx_Max_Heap[MaxH_Size - 1][1];
+          MaxH_Size--;
+        
+          
+          MaxH_Heapify(0);
+        }
+      //
+    //
 
     //Algorithm itself
       int SS_T(int n, integer_t *p, integer_t desired_sum){
- 
+        
+        // Get sub-arrays sizes
         int aSize = (n/2)/2;
         int bSize = ((n/2) - (n/2)/2);
         int cSize = (n - n/2)/2;
         int dSize = ((n - n/2) - (n - n/2)/2);
         
-      
         int aCombSize = 1<<aSize;
         int bCombSize = 1<<bSize;
         int cCombSize = 1<<cSize;
         int dCombSize = 1<<dSize;
       
-        // arranja espaço para as somas
+        // Allocate space for them
         integer_t *A = malloc(sizeof(integer_t)*aCombSize);
         integer_t *B = malloc(sizeof(integer_t)*bCombSize);
         integer_t *C = malloc(sizeof(integer_t)*cCombSize);
         integer_t *D = malloc(sizeof(integer_t)*dCombSize);
-      
+
+        // Create Sorted sub arrays 
         faster_calcsubarray(p, A, aSize, 0);
         faster_calcsubarray(p, B, bSize, aSize);
         faster_calcsubarray(p, C, cSize, aSize + bSize);
         faster_calcsubarray(p, D, dSize, aSize + bSize + cSize);
-        
-            /*printf("----- A ------\n");
-            for(int i=0; i<aCombSize;i++){
-              printf("%lld, ", A[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- B ------\n");
-            for(int i=0; i<bCombSize;i++){
-              printf("%lld, ", B[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- C ------\n");
-            for(int i=0; i<cCombSize;i++){
-              printf("%lld, ", C[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- D ------\n");
-            for(int i=0; i<dCombSize;i++){
-              printf("%lld, ", D[i]);
-            }
-            printf("\n---------------\n");*/
            
+        // Populate Heaps   
         for (int k = 0; k < bCombSize; k++){
-          InsertMinHeap(B[k], k, 0);
+          MinH_Insert(B[k], k, 0);
         }
-
         for (int k = 0; k < aCombSize; k++){
-          InsertMaxHeap(A[k] + C[cCombSize - 1], k, cCombSize - 1);
-        }
-         
+          MaxH_Insert(A[k] + C[cCombSize - 1], k, cCombSize - 1);
+        } 
+
+        // Loop 1<<n times(maximon possibilities)
         integer_t K = pow(2,n);
         integer_t min, max;
-      
         for (integer_t i = 0; i < K; i++){
-        
-          max = maxHeap[0];
-          min = minHeap[0];
-      
-          iMin = iMinIndices[0];
-          jMin = jMinIndices[0];
           
-          iMax = iMaxIndices[0];
-          jMax = jMaxIndices[0];
+          // Get Roots of the Heaps
+          max = Max_Heap[0];
+          min = Min_Heap[0];
+          MinH_i = Idx_Min_Heap[0][0];
+          MinH_j = Idx_Min_Heap[0][1];
+          MaxH_i = Idx_Max_Heap[0][0];
+          MaxH_j = Idx_Max_Heap[0][1];
       
-          integer_t sum = min + max;
-
-          
+          // Test Sum
+          integer_t sum = min + max; 
           if (sum == desired_sum){
-            
-            /*printf("----- Max Heap ------\n");
-            for(int i=0; i<maxSize;i++){
-              printf("%lld, ", maxHeap[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- Min Heap ------\n");
-            for(int i=0; i<minSize;i++){
-              printf("%lld, ", minHeap[i]);
-            }
-            printf("\n---------------\n");*/
             
             return 1;
           }
           else if (sum < desired_sum){
-          
-            MinPop();
-            if (jMin + 1 < dCombSize){ 
+            
+            // Pop and if possible switch root 
+            MinH_Pop();
+            if (MinH_j + 1 < dCombSize){ 
                
-              InsertMinHeap(B[iMin] + D[jMin+1], iMin, jMin+1);
+              MinH_Insert(B[MinH_i] + D[MinH_j+1], MinH_i, MinH_j+1);
             }
           }
           else{
-          
-            MaxPop();
-            if (jMax > 0){ 
-              InsertMaxHeap(A[iMax] + C[jMax-1], iMax, jMax-1);
+
+            // Pop and if possible switch root 
+            MaxH_Pop();
+            if (MaxH_j > 0){ 
+              MaxH_Insert(A[MaxH_i] + C[MaxH_j-1], MaxH_i, MaxH_j-1);
             }
           }
-
-          printf("jMax = %lld, jMin = %lld, iMax = %lld, iMin = %lld\n", jMax, jMin, iMax, iMin);
-
         }
-        printf("----\n");
+
         return 0;
       }
     //
@@ -824,7 +596,7 @@ int main(void)
   fprintf(stderr,"  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
   
  
-  /* Setting up file */
+  /* Setting up file 
   FILE *fp_1 = NULL;
   FILE *fp_2 = NULL;
   FILE *fp_3 = NULL;
@@ -836,9 +608,9 @@ int main(void)
   FILE *fp_9 = NULL;
   FILE *fp_10 = NULL;
   FILE *fp_11 = NULL;
-  FILE *fp_12 = NULL;
+  FILE *fp_12 = NULL;*/
   FILE *fp_13 = NULL;
-  FILE *fp_14 = NULL;
+  FILE *fp_14 = NULL;/*
   fp_1 = fopen("data_1.log", "a");
   fp_2 = fopen("data_1_max.log", "a");
   fp_3 = fopen("data_2.log", "a");
@@ -850,16 +622,16 @@ int main(void)
   fp_9 = fopen("data_5.log", "a");
   fp_10 = fopen("data_5_max.log", "a");
   fp_11 = fopen("data_6.log", "a");
-  fp_12 = fopen("data_6_max.log", "a");
+  fp_12 = fopen("data_6_max.log", "a");*/
   fp_13 = fopen("data_7.log", "a");
   fp_14 = fopen("data_7_max.log", "a");
     
  
 
   // Loop for n's
-  for(int i = 0;i < 1;i++){
+  for(int i = 0;i < 10;i++){
   
-    printf("--------------------------- \n");
+  //  printf("--------------------------- \n");
                 
     // get n and p
     int n = all_subset_sum_problems[i].n;  
@@ -869,7 +641,8 @@ int main(void)
     // Set up to get the combinations 
     char comb_bin[n+1];
 
-    // Setting up time variables    
+    // Setting up time variables 
+    /*   
     double dt_bf_i = 0;  
     double dt_bf_i_max = 0;  
     double dt_bf_r = 0;
@@ -879,12 +652,12 @@ int main(void)
     double dt_mitm = 0;     
     double dt_mitm_max = 0;
     double dt_f_mitm = 0;     
-    double dt_f_mitm_max = 0;
+    double dt_f_mitm_max = 0;*/
     double dt_ss = 0;     
     double dt_ss_max = 0;
 
     // Loop for sum's
-    for(int j = 0;j < 1;j++){
+    for(int j = 0;j < n_sums;j++){
            
       integer_t sum = all_subset_sum_problems[i].sums[j];
       double tmp_dt;
@@ -952,13 +725,13 @@ int main(void)
       
  
       // print results
-      printf("-------------------------------------------------\n");/*
-      printf("Brute force                           %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
+      printf("-------------------------------------------------\n");
+     /* printf("Brute force                           %d,  %lld || %i -> %s  \n", j ,sum,comb,   Converter(n, comb, comb_bin));
       printf("Brute force recursiva                 %d,  %lld || %i -> %s  \n", j ,sum,comb_rec,   Converter(n, comb_rec, comb_bin));
       printf("Brute force recur smart               %d,  %lld || %lld -> %s  \n", j ,sum,comb_smart,   Converter(n, comb_smart, comb_bin));  
       printf("Meet in the middle                    %d,  %lld || %i  \n", j ,sum, x);
       printf("Faster meet in the middle             %d,  %lld || %i  \n", j ,sum, y);*/
-      printf("Schroeppel and Shamir technique       %d,  %lld || %lld \n", j ,sum,z); 
+      printf("Schroeppel and Shamir technique       %d || %d \n", j ,z); 
             
     }
 
@@ -975,9 +748,9 @@ int main(void)
     fprintf(fp_9,"%i %f \n",n, dt_f_mitm/20);
     fprintf(fp_10,"%i %f \n",n, dt_f_mitm_max);
     fprintf(fp_11,"%i %f \n",n, dt_ss/20);
-    fprintf(fp_12,"%i %f \n",n, dt_ss_max);
-    fprintf(fp_13,"%i %f \n",n, dt_ss/20);
-    fprintf(fp_14,"%i %f \n",n, dt_ss_max);*/
+    fprintf(fp_12,"%i %f \n",n, dt_ss_max);*/
+    printf("%d %f \n",n, dt_ss/20);
+    printf("%d %f \n",n, dt_ss_max);
 
   }     
 
