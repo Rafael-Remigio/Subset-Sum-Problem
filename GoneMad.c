@@ -629,7 +629,7 @@ int main(void)
  
 
   // Loop for n's
-  for(int i = 0;i < 10;i++){
+  for(int i = 50;i < n_problems;i++){
   
   //  printf("--------------------------- \n");
                 
