@@ -494,40 +494,40 @@
       int SS_T(int n, integer_t *p, integer_t desired_sum){
         
         // Get sub-arrays sizes
-        int aSize = (n/2)/2;
-        int bSize = ((n/2) - (n/2)/2);
-        int cSize = (n - n/2)/2;
-        int dSize = ((n - n/2) - (n - n/2)/2);
+        int Pre_A_Size = (n/2)/2;
+        int Pre_B_Size = ((n/2) - (n/2)/2);
+        int Pre_C_Size = (n - n/2)/2;
+        int Pre_D_Size = ((n - n/2) - (n - n/2)/2);
         
-        int aCombSize = 1<<aSize;
-        int bCombSize = 1<<bSize;
-        int cCombSize = 1<<cSize;
-        int dCombSize = 1<<dSize;
+        int A_Size = 1<<Pre_A_Size;
+        int B_Size = 1<<Pre_B_Size;
+        int C_Size = 1<<Pre_C_Size;
+        int D_Size = 1<<Pre_D_Size;
       
         // Allocate space for them
-        integer_t *A = malloc(sizeof(integer_t)*aCombSize);
-        integer_t *B = malloc(sizeof(integer_t)*bCombSize);
-        integer_t *C = malloc(sizeof(integer_t)*cCombSize);
-        integer_t *D = malloc(sizeof(integer_t)*dCombSize);
+        integer_t *A = malloc(sizeof(integer_t)*A_Size);
+        integer_t *B = malloc(sizeof(integer_t)*B_Size);
+        integer_t *C = malloc(sizeof(integer_t)*C_Size);
+        integer_t *D = malloc(sizeof(integer_t)*D_Size);
 
         // Create Sorted sub arrays 
-        faster_calcsubarray(p, A, aSize, 0);
-        faster_calcsubarray(p, B, bSize, aSize);
-        faster_calcsubarray(p, C, cSize, aSize + bSize);
-        faster_calcsubarray(p, D, dSize, aSize + bSize + cSize);
+        faster_calcsubarray(p, A, Pre_A_Size, 0);
+        faster_calcsubarray(p, B, Pre_B_Size, Pre_A_Size);
+        faster_calcsubarray(p, C, Pre_C_Size, Pre_A_Size + Pre_B_Size);
+        faster_calcsubarray(p, D, Pre_D_Size, Pre_A_Size + Pre_B_Size + Pre_C_Size);
            
         // Populate Heaps   
-        for (int k = 0; k < bCombSize; k++){
+        for (int k = 0; k < B_Size; k++){
           MinH_Insert(B[k], k, 0);
         }
-        for (int k = 0; k < aCombSize; k++){
-          MaxH_Insert(A[k] + C[cCombSize - 1], k, cCombSize - 1);
+        for (int k = 0; k < A_Size; k++){
+          MaxH_Insert(A[k] + C[C_Size - 1], k, C_Size - 1);
         } 
 
         // Loop 1<<n times(maximon possibilities)
-        integer_t K = pow(2,n);
+        integer_t Maximum_Pos = pow(2,n);
         integer_t min, max;
-        for (integer_t i = 0; i < K; i++){
+        for (integer_t i = 0; i < Maximum_Pos; i++){
           
           // Get Roots of the Heaps
           max = Max_Heap[0];
@@ -547,7 +547,7 @@
             
             // Pop and if possible switch root 
             MinH_Pop();
-            if (MinH_j + 1 < dCombSize){ 
+            if (MinH_j + 1 < D_Size){ 
                
               MinH_Insert(B[MinH_i] + D[MinH_j+1], MinH_i, MinH_j+1);
             }
@@ -629,7 +629,7 @@ int main(void)
  
 
   // Loop for n's
-  for(int i = 50;i < n_problems;i++){
+  for(int i = 53;i < n_problems;i++){
   
   //  printf("--------------------------- \n");
                 
