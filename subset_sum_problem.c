@@ -709,27 +709,6 @@
         faster_calcsubarray(p, C, cSize, aSize + bSize);
         faster_calcsubarray(p, D, dSize, aSize + bSize + cSize);
         
-            /*printf("----- A ------\n");
-            for(int i=0; i<aCombSize;i++){
-              printf("%lld, ", A[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- B ------\n");
-            for(int i=0; i<bCombSize;i++){
-              printf("%lld, ", B[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- C ------\n");
-            for(int i=0; i<cCombSize;i++){
-              printf("%lld, ", C[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- D ------\n");
-            for(int i=0; i<dCombSize;i++){
-              printf("%lld, ", D[i]);
-            }
-            printf("\n---------------\n");*/
-           
         for (int k = 0; k < bCombSize; k++){
           InsertMinHeap(B[k], k, 0);
         }
@@ -756,18 +735,6 @@
 
           
           if (sum == desired_sum){
-            
-            /*printf("----- Max Heap ------\n");
-            for(int i=0; i<maxSize;i++){
-              printf("%lld, ", maxHeap[i]);
-            }
-            printf("\n---------------\n");
-            printf("----- Min Heap ------\n");
-            for(int i=0; i<minSize;i++){
-              printf("%lld, ", minHeap[i]);
-            }
-            printf("\n---------------\n");*/
-            
             return 1;
           }
           else if (sum < desired_sum){
@@ -786,10 +753,7 @@
             }
           }
 
-          printf("jMax = %lld, jMin = %lld, iMax = %lld, iMin = %lld\n", jMax, jMin, iMax, iMin);
-
         }
-        printf("----\n");
         return 0;
       }
     //
